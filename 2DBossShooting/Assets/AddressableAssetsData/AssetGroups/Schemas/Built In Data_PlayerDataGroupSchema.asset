@@ -9,12 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6afa5d718b6280469f306dcc3eac36e, type: 3}
-  m_Name: NormalPlayerData
+  m_Script: {fileID: 11500000, guid: b1487f5d688e4f94f828f879d599dbdc, type: 3}
+  m_Name: Built In Data_PlayerDataGroupSchema
   m_EditorClassIdentifier: 
-  _player: {fileID: 2553854124127812840, guid: 379cb0f36619e0546bd69ea010319d53, type: 3}
-  _maxLife: 3
-  _maxBomb: 3
-  _normalSpeed: 0.1
-  _lowSpeed: 0.04
-  _shotCoolTime: 0.5
+  m_Group: {fileID: 11400000, guid: 606407d1e4ea47f49b4d339b58d21014, type: 2}
+  m_IncludeResourcesFolders: 1
+  m_IncludeBuildSettingsScenes: 1

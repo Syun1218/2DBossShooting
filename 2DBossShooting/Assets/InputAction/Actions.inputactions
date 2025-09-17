@@ -134,7 +134,7 @@
                 {
                     "name": "",
                     "id": "a4a9e9b6-8a7c-4252-9f99-e4291b2cac60",
-                    "path": "<Keyboard>/g",
+                    "path": "<Keyboard>/b",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -150,6 +150,34 @@
                     "processors": "",
                     "groups": "",
                     "action": "Shot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Director",
+            "id": "12e7d82f-e099-40a6-b333-4a78d51878e0",
+            "actions": [
+                {
+                    "name": "Pouse",
+                    "type": "Button",
+                    "id": "1014dfb8-b753-4b0a-8110-e758cf4e26fa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "310dfc7b-788d-466a-bde4-5a6e088d5e77",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pouse",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

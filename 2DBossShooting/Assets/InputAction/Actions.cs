@@ -156,7 +156,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a4a9e9b6-8a7c-4252-9f99-e4291b2cac60"",
-                    ""path"": ""<Keyboard>/g"",
+                    ""path"": ""<Keyboard>/b"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -176,6 +176,34 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Director"",
+            ""id"": ""12e7d82f-e099-40a6-b333-4a78d51878e0"",
+            ""actions"": [
+                {
+                    ""name"": ""Pouse"",
+                    ""type"": ""Button"",
+                    ""id"": ""1014dfb8-b753-4b0a-8110-e758cf4e26fa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""310dfc7b-788d-466a-bde4-5a6e088d5e77"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -186,6 +214,9 @@ public partial class @Actions: IInputActionCollection2, IDisposable
         m_Player_LowSpeed = m_Player.FindAction("LowSpeed", throwIfNotFound: true);
         m_Player_Bomb = m_Player.FindAction("Bomb", throwIfNotFound: true);
         m_Player_Shot = m_Player.FindAction("Shot", throwIfNotFound: true);
+        // Director
+        m_Director = asset.FindActionMap("Director", throwIfNotFound: true);
+        m_Director_Pouse = m_Director.FindAction("Pouse", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -313,11 +344,61 @@ public partial class @Actions: IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Director
+    private readonly InputActionMap m_Director;
+    private List<IDirectorActions> m_DirectorActionsCallbackInterfaces = new List<IDirectorActions>();
+    private readonly InputAction m_Director_Pouse;
+    public struct DirectorActions
+    {
+        private @Actions m_Wrapper;
+        public DirectorActions(@Actions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Pouse => m_Wrapper.m_Director_Pouse;
+        public InputActionMap Get() { return m_Wrapper.m_Director; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(DirectorActions set) { return set.Get(); }
+        public void AddCallbacks(IDirectorActions instance)
+        {
+            if (instance == null || m_Wrapper.m_DirectorActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_DirectorActionsCallbackInterfaces.Add(instance);
+            @Pouse.started += instance.OnPouse;
+            @Pouse.performed += instance.OnPouse;
+            @Pouse.canceled += instance.OnPouse;
+        }
+
+        private void UnregisterCallbacks(IDirectorActions instance)
+        {
+            @Pouse.started -= instance.OnPouse;
+            @Pouse.performed -= instance.OnPouse;
+            @Pouse.canceled -= instance.OnPouse;
+        }
+
+        public void RemoveCallbacks(IDirectorActions instance)
+        {
+            if (m_Wrapper.m_DirectorActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IDirectorActions instance)
+        {
+            foreach (var item in m_Wrapper.m_DirectorActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_DirectorActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public DirectorActions @Director => new DirectorActions(this);
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLowSpeed(InputAction.CallbackContext context);
         void OnBomb(InputAction.CallbackContext context);
         void OnShot(InputAction.CallbackContext context);
+    }
+    public interface IDirectorActions
+    {
+        void OnPouse(InputAction.CallbackContext context);
     }
 }

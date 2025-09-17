@@ -13,6 +13,8 @@ public class PlayerData : ScriptableObject
 
     [SerializeField] private float _normalSpeed;
     [SerializeField] private float _lowSpeed;
+
+    [SerializeField] private float _shotCoolTime;
 	#endregion
 
 	#region プロパティ
@@ -40,9 +42,10 @@ public class PlayerData : ScriptableObject
     {
         get { return _lowSpeed; }
     }
-	#endregion
 
-	#region メソッド
-
+    public float ShotCoolTime
+    {
+        get { return _shotCoolTime; }
+    }
 	#endregion
 }
