@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public class ObjectPool
 {
 	#region 変数
+	private GameObject _bulletParent;
 	private Queue<GameObject> _pool = new Queue<GameObject>();
 	private GameObject _poolObject;
 
@@ -22,10 +23,13 @@ public class ObjectPool
 	#region メソッド
 	public ObjectPool(GameObject poolObject,int count)
     {
-		//渡されたオブジェクトを生成し、キューに記録
+		//ヒエラルキーの整理用に弾を子としてもつ空オブジェクトを生成
+		_bulletParent = new GameObject("PlayerBulletParent");
+
+		//渡されたオブジェクトをプレイヤーの子として生成し、キューに記録
 		for(int i = 0;i < count; i++)
         {
-			_poolObject = GameObject.Instantiate(poolObject, _poolInstancePosition,poolObject.transform.rotation);
+			_poolObject = GameObject.Instantiate(poolObject, _poolInstancePosition,poolObject.transform.rotation,_bulletParent.transform);
 			_pool.Enqueue(_poolObject);
         }
     }
@@ -36,7 +40,6 @@ public class ObjectPool
 	/// <param name="obj">返却するオブジェクト</param>
 	public void EnqueueObject(GameObject obj)
     {
-        obj.GetComponent<BulletBace>().BulletDisabled();
         obj.transform.position = _poolInstancePosition;
 		_pool.Enqueue(obj);
     }
@@ -54,7 +57,6 @@ public class ObjectPool
         }
 
 		_poolObject = _pool.Dequeue();
-        _poolObject.GetComponent<BulletBace>().BulletEnabled();
         _poolObject.transform.position = pos;
 		return _poolObject;
     }

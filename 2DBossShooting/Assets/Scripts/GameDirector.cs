@@ -21,6 +21,7 @@ public class GameDirector : MonoBehaviour
     private PoolData _playerPoolData;
     private GameObject _player;
 
+    //定数
     private readonly Vector2 _playerInstancePosition = new Vector2(-5, 0);
     #endregion
 
@@ -42,6 +43,7 @@ public class GameDirector : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
 
         //スクリプタブルオブジェクトをロードする

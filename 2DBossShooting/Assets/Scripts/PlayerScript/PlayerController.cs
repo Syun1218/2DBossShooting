@@ -20,6 +20,7 @@ public class PlayerController
     private PlayerMove _playerMove;
     private ObjectPool _objectPool;
     private float _nowCoolTime;
+    private PlayerBulletDirector _bulletDirector;
     #endregion
 
     #region プロパティ
@@ -49,6 +50,7 @@ public class PlayerController
 
         //弾のプールを生成
         _objectPool = new ObjectPool(_playerPoolData.InstanceObject, _playerPoolData.InstanceCount);
+        _bulletDirector = new PlayerBulletDirector(_playerPoolData.InstanceCount,_playerData.BulletSpeed,_objectPool);
 
         //アクションクラスのインスタンスを生成
         _playerMove = new PlayerMove( _playerData.NormalSpeed, _playerData.LowSpeed, _player.transform);
@@ -65,7 +67,7 @@ public class PlayerController
         //ショット操作がされているかつクールタイムが明けている場合、弾を発射する
         if (_canShot && _inputShot)
         {
-            _objectPool.DequeueObject(_player.transform.position);
+            _bulletDirector.SetActiveBullet(_objectPool.DequeueObject(_player.transform.position));
             _canShot = false;
         }
         //ショットのクールタイムを計測する
@@ -83,6 +85,7 @@ public class PlayerController
     public void OnFixedUpdata()
     {
         _playerMove.MovePlayer(_isRawSpeed, _moveValue);
+        _bulletDirector.OnFixedUpdate();
     }
 
     /// <summary>

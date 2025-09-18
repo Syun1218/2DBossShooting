@@ -12,6 +12,12 @@ public class PlayerMove
 	private float _lowSpeed;
 	private Transform _playerTransform;
 	private Vector2 _nowPosition;
+
+	//移動制限定数
+	private const float MAX_X_POSITION = 8.4f;
+	private const float MIN_X_POSITION = -8.4f;
+	private const float MAX_Y_POSITION = 3.6f;
+	private const float MIN_Y_POSITION = -4.3f;
 	#endregion
 
 	#region プロパティ
@@ -35,6 +41,7 @@ public class PlayerMove
     {
 		_nowPosition = _playerTransform.position;
 
+		//低速移動の場合と通常の場合で処理を分ける
         if (isLowSpeed)
         {
 			_nowPosition.x += moveValue.x * _lowSpeed;
@@ -46,6 +53,28 @@ public class PlayerMove
 			_nowPosition.y += moveValue.y * _normalSpeed;
 		}
 
+		//プレイヤーが制限範囲外に出る場合、制限範囲内になるように値を補正する
+		if(_nowPosition.x > MAX_X_POSITION)
+        {
+			_nowPosition.x = MAX_X_POSITION;
+        }
+
+		if(MIN_X_POSITION > _nowPosition.x)
+        {
+			_nowPosition.x = MIN_X_POSITION;
+        }
+
+		if(_nowPosition.y > MAX_Y_POSITION)
+        {
+			_nowPosition.y = MAX_Y_POSITION;
+        }
+
+		if(MIN_Y_POSITION > _nowPosition.y)
+        {
+			_nowPosition.y = MIN_Y_POSITION;
+        }
+
+		//座標を反映する
 		_playerTransform.position = _nowPosition;
     }
 	#endregion
