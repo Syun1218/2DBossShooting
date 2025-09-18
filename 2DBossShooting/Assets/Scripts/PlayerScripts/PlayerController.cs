@@ -21,7 +21,7 @@ public class PlayerController
     private PlayerMove _playerMove;
     private ObjectPool _objectPool;
     private float _nowCoolTime;
-    private PlayerBulletDirector _bulletDirector;
+    private BulletDirector _bulletDirector;
     #endregion
 
     #region プロパティ
@@ -57,7 +57,7 @@ public class PlayerController
 
         //弾のプールを生成
         _objectPool = new ObjectPool(_playerBulletData.Bullet, _playerBulletData.InstanceCount,_playerBulletData.BulletColliderRadius,_playerBulletData.BulletObjectType);
-        _bulletDirector = new PlayerBulletDirector(_playerBulletData.InstanceCount,_playerBulletData.BulletSpeed,_objectPool);
+        _bulletDirector = new BulletDirector(_playerBulletData.InstanceCount,_playerBulletData.BulletSpeed,_objectPool,_playerBulletData.MyType);
 
         //アクションクラスのインスタンスを生成
         _playerMove = new PlayerMove( _playerData.NormalSpeed, _playerData.LowSpeed, _player.transform);
