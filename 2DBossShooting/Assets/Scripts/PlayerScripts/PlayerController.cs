@@ -10,7 +10,7 @@ public class PlayerController
 {
     #region 変数
     private PlayerData _playerData;
-    private PoolData _playerPoolData;
+    private BulletData _playerBulletData;
     private GameObject _player;
     private SelfCircleCollider _playerCollider;
     private bool _inputShot = false;
@@ -29,17 +29,17 @@ public class PlayerController
     #endregion
 
     #region メソッド
-    public PlayerController(PlayerData data,GameObject player,PoolData poolData)
+    public PlayerController(PlayerData data,GameObject player,BulletData bulletData)
     {
         //プレイヤーとプレイヤーデータを取得
         _playerData = data;
-        _playerPoolData = poolData; 
+        _playerBulletData = bulletData; 
         _player = player;
 
         //プレイヤーコライダーの設定を行い、衝突判定の対象にする
         _playerCollider = _player.GetComponent<SelfCircleCollider>();
         _playerCollider.Radius = _playerData.PlayerColliderRadius;
-        _playerCollider.MyObjectType = _playerData.PlayerObjectType;
+        _playerCollider.MyObjectType = SelfCircleCollider.ObjectType.Player;
         CheckSelfCollider.Instance.SetColliderObject(_player);
 
         //インプットアクションの初期化
@@ -56,8 +56,8 @@ public class PlayerController
         _actions.Player.Shot.canceled += OnShot;
 
         //弾のプールを生成
-        _objectPool = new ObjectPool(_playerPoolData.InstanceObject, _playerPoolData.InstanceCount,_playerData.PlayerBulletColliderRadius,_playerData.PlayerBulletObjectType);
-        _bulletDirector = new PlayerBulletDirector(_playerPoolData.InstanceCount,_playerData.BulletSpeed,_objectPool);
+        _objectPool = new ObjectPool(_playerBulletData.Bullet, _playerBulletData.InstanceCount,_playerBulletData.BulletColliderRadius,_playerBulletData.BulletObjectType);
+        _bulletDirector = new PlayerBulletDirector(_playerBulletData.InstanceCount,_playerBulletData.BulletSpeed,_objectPool);
 
         //アクションクラスのインスタンスを生成
         _playerMove = new PlayerMove( _playerData.NormalSpeed, _playerData.LowSpeed, _player.transform);

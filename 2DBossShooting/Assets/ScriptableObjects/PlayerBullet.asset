@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68fb17c3609ea5b4c90fc91e7dcd3448, type: 3}
   m_Name: PlayerBullet
   m_EditorClassIdentifier: 
-  _instanceObject: {fileID: 7632386486638435561, guid: f4de7d3fc477828488b07a127ff5c676, type: 3}
+  _bullet: {fileID: 7632386486638435561, guid: f4de7d3fc477828488b07a127ff5c676, type: 3}
+  _myType: 0
   _instanceCount: 20
+  _bulletSpeed: 0.3
+  _bulletColliderRadius: 0.15

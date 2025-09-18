@@ -15,14 +15,11 @@ public class GameDirector : MonoBehaviour
 
     //プレイヤー変数
     private AsyncOperationHandle<PlayerData> _loadPlayerData;
-    private AsyncOperationHandle<PoolData> _poolData;
+    private AsyncOperationHandle<BulletData> _bulletData;
     private PlayerController _playerController;
     private PlayerData _playerData;
-    private PoolData _playerPoolData;
+    private BulletData _playerBulletData;
     private GameObject _player;
-
-    //定数
-    private readonly Vector2 _playerInstancePosition = new Vector2(-5, 0);
     #endregion
 
     #region プロパティ
@@ -49,14 +46,14 @@ public class GameDirector : MonoBehaviour
         //スクリプタブルオブジェクトをロードする
         _loadPlayerData = Addressables.LoadAssetAsync<PlayerData>("PlayerData");
         _playerData = _loadPlayerData.WaitForCompletion();
-        _poolData = Addressables.LoadAssetAsync<PoolData>("PlayerBullet");
-        _playerPoolData = _poolData.WaitForCompletion();
+        _bulletData = Addressables.LoadAssetAsync<BulletData>("PlayerBullet");
+        _playerBulletData = _bulletData.WaitForCompletion();
 
         //各オブジェクトを生成する
-        _player = Instantiate(_playerData.Player, _playerInstancePosition, Quaternion.identity);
+        _player = Instantiate(_playerData.Player, _playerData.PlayerInstancePosition, Quaternion.identity);
 
         //各管理クラスのインスタンスを生成する
-        _playerController = new PlayerController(_playerData, _player,_playerPoolData);
+        _playerController = new PlayerController(_playerData, _player,_playerBulletData);
     }
 
     private void Update()

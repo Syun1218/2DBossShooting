@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d48e706577e2824aaf19db0f30c85c1, type: 3}
+  m_Name: NormalBoss
+  m_EditorClassIdentifier: 
+  _enemy: {fileID: 6975254753709398452, guid: 7ad0c6e486d5e144e9864dc7c67ff0e1, type: 3}
+  _subEnemies:
+  - {fileID: 8060225660876356877, guid: 991b0978267e88f4ab9dc0f332143601, type: 3}
+  - {fileID: 1821937375026258791, guid: cd325e7bf4dbfa648898a3308ec9e90a, type: 3}
+  _enemyInstancePosition: {x: 7, y: 0}
+  _subEnemiesInstancePosition:
+  - {x: 6.5, y: 2.25}
+  - {x: 6.5, y: -2.25}
+  _enemyColliderRadius: 0.75
+  _subEnemiesColliderRadius:
+  - 1.75
+  - 1.75
+  _maxHP: 50
+  _subEnemiesMaxHP: 9600000096000000
+  _speed: 0.1
