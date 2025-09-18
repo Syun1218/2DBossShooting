@@ -48,12 +48,13 @@ public class CheckSelfCollider : MonoBehaviour
 	/// </summary>
 	public void RemoveColliderObject(GameObject obj)
     {
-
+        _colliders.Remove(obj.GetComponent<SelfCircleCollider>());
     }
 
     private void Update()
     {
         //衝突判定を行う
+        
     }
     #endregion
 }

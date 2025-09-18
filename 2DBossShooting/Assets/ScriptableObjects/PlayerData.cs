@@ -7,6 +7,8 @@ public class PlayerData : ScriptableObject
 {
     #region 変数
     [SerializeField] private GameObject _player;
+    [SerializeField] private float _playerColliderRadius;
+    private SelfCircleCollider.ObjectType _playerObjectType = SelfCircleCollider.ObjectType.Player;
 
     [SerializeField] private int _maxLife;
     [SerializeField] private int _maxBomb;
@@ -16,6 +18,8 @@ public class PlayerData : ScriptableObject
 
     [SerializeField] private float _shotCoolTime;
     [SerializeField] private float _bulletSpeed;
+    [SerializeField] private float _playerBulletColliderRadius;
+    private SelfCircleCollider.ObjectType _playerBulletObjectType = SelfCircleCollider.ObjectType.PlayerBullet;
 	#endregion
 
 	#region プロパティ
@@ -25,6 +29,16 @@ public class PlayerData : ScriptableObject
     public GameObject Player
     {
         get { return _player; }
+    }
+
+    public float PlayerColliderRadius
+    {
+        get { return _playerColliderRadius; }
+    }
+
+    public SelfCircleCollider.ObjectType PlayerObjectType
+    {
+        get { return _playerObjectType; }
     }
 
     /// <summary>
@@ -73,6 +87,16 @@ public class PlayerData : ScriptableObject
     public float BulletSpeed
     {
         get { return _bulletSpeed; }
+    }
+
+    public float PlayerBulletColliderRadius
+    {
+        get { return _playerBulletColliderRadius; }
+    }
+
+    public SelfCircleCollider.ObjectType PlayerBulletObjectType
+    {
+        get { return _playerBulletObjectType; }
     }
 	#endregion
 }

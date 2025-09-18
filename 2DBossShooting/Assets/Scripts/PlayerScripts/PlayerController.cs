@@ -12,6 +12,7 @@ public class PlayerController
     private PlayerData _playerData;
     private PoolData _playerPoolData;
     private GameObject _player;
+    private SelfCircleCollider _playerCollider;
     private bool _inputShot = false;
     private bool _canShot = true;
 	private Actions _actions;
@@ -35,6 +36,12 @@ public class PlayerController
         _playerPoolData = poolData; 
         _player = player;
 
+        //プレイヤーコライダーの設定を行い、衝突判定の対象にする
+        _playerCollider = _player.GetComponent<SelfCircleCollider>();
+        _playerCollider.Radius = _playerData.PlayerColliderRadius;
+        _playerCollider.MyObjectType = _playerData.PlayerObjectType;
+        CheckSelfCollider.Instance.SetColliderObject(_player);
+
         //インプットアクションの初期化
         _actions = new Actions();
 
@@ -49,7 +56,7 @@ public class PlayerController
         _actions.Player.Shot.canceled += OnShot;
 
         //弾のプールを生成
-        _objectPool = new ObjectPool(_playerPoolData.InstanceObject, _playerPoolData.InstanceCount);
+        _objectPool = new ObjectPool(_playerPoolData.InstanceObject, _playerPoolData.InstanceCount,_playerData.PlayerBulletColliderRadius,_playerData.PlayerBulletObjectType);
         _bulletDirector = new PlayerBulletDirector(_playerPoolData.InstanceCount,_playerData.BulletSpeed,_objectPool);
 
         //アクションクラスのインスタンスを生成

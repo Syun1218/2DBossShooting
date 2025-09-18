@@ -66,7 +66,6 @@ public class GameDirector : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //各管理クラスを作動させる
         _playerController.OnFixedUpdata();
     }
     #endregion

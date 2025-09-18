@@ -11,6 +11,7 @@ public class ObjectPool
 	private GameObject _bulletParent;
 	private Queue<GameObject> _pool = new Queue<GameObject>();
 	private GameObject _poolObject;
+	private SelfCircleCollider _poolObjectCollider;
 
 	//定数
 	private readonly Vector2 _poolInstancePosition = new Vector2(-50, 0);
@@ -21,7 +22,7 @@ public class ObjectPool
 	#endregion
 
 	#region メソッド
-	public ObjectPool(GameObject poolObject,int count)
+	public ObjectPool(GameObject poolObject,int count,float radius,SelfCircleCollider.ObjectType type)
     {
 		//ヒエラルキーの整理用に弾を子としてもつ空オブジェクトを生成
 		_bulletParent = new GameObject("PlayerBulletParent");
@@ -30,6 +31,9 @@ public class ObjectPool
 		for(int i = 0;i < count; i++)
         {
 			_poolObject = GameObject.Instantiate(poolObject, _poolInstancePosition,poolObject.transform.rotation,_bulletParent.transform);
+			_poolObjectCollider = _poolObject.GetComponent<SelfCircleCollider>();
+			_poolObjectCollider.Radius = radius;
+			_poolObjectCollider.MyObjectType = type;
 			_pool.Enqueue(_poolObject);
         }
     }
@@ -40,6 +44,10 @@ public class ObjectPool
 	/// <param name="obj">返却するオブジェクト</param>
 	public void EnqueueObject(GameObject obj)
     {
+		//オブジェクトを衝突判定の対象から外す
+		CheckSelfCollider.Instance.RemoveColliderObject(obj);
+
+		//プールにしまう
         obj.transform.position = _poolInstancePosition;
 		_pool.Enqueue(obj);
     }
@@ -56,8 +64,13 @@ public class ObjectPool
 			return null;
         }
 
+		//プールからオブジェクトを取り出す
 		_poolObject = _pool.Dequeue();
         _poolObject.transform.position = pos;
+
+		//取り出したオブジェクトを衝突判定の対象にする
+		CheckSelfCollider.Instance.SetColliderObject(_poolObject);
+
 		return _poolObject;
     }
 	#endregion
