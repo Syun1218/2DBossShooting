@@ -3,6 +3,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.AddressableAssets;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// ゲームシーンの進行を管理するクラス
@@ -75,7 +76,7 @@ public class GameDirector : MonoBehaviour
 
         //各管理クラスのインスタンスを生成する
         _playerController = new PlayerController(_playerData, _player,_playerBulletData);
-        _enemyController = new EnemyController();
+        _enemyController = new EnemyController(_enemy,_subEnemies,_enemyParent,_enemyData);
     }
 
     private void Update()
@@ -86,6 +87,15 @@ public class GameDirector : MonoBehaviour
     private void FixedUpdate()
     {
         _playerController.OnFixedUpdata();
+        _enemyController.OnFixedUpdate();
+    }
+
+    /// <summary>
+    /// ボスが倒された場合に呼ばれ、終了処理を行う
+    /// </summary>
+    public void KilledBoss()
+    {
+        SceneManager.LoadScene("GameOver");
     }
     #endregion
 }

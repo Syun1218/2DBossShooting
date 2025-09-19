@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// プレイヤー操作を管理し、各アクションスクリプトへの中継を行う
 /// </summary>
-public class PlayerController
+public class PlayerController:CollisionInterface
 {
     #region 変数
     private PlayerData _playerData;
@@ -40,6 +40,7 @@ public class PlayerController
         _playerCollider = _player.GetComponent<SelfCircleCollider>();
         _playerCollider.Radius = _playerData.PlayerColliderRadius;
         _playerCollider.MyObjectType = SelfCircleCollider.ObjectType.Player;
+        _playerCollider.MyCollisionInterface = this;
         CheckSelfCollider.Instance.SetColliderObject(_player);
 
         //インプットアクションの初期化
@@ -87,6 +88,8 @@ public class PlayerController
                 _canShot = true;
             }
         }
+
+        _bulletDirector.OnUpdate();
     }
 
     public void OnFixedUpdata()
@@ -132,6 +135,11 @@ public class PlayerController
         {
             _inputShot = false;
         }
+    }
+
+    public void OnCollision(SelfCircleCollider.ObjectType otherType)
+    {
+        //残機を減らす
     }
     #endregion
 }

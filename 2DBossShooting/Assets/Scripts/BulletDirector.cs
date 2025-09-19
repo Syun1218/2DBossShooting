@@ -9,11 +9,13 @@ public class BulletDirector
 {
 	#region 変数
 	private GameObject[] _bulletArray;
+	private SelfCircleCollider[] _bulletColliderArray;
 	private int _maxCount;
 	private float _bulletSpeed;
 	private Vector2 _bulletNowPosition;
 	private ObjectPool _bulletPool;
 	private BulletData.BulletType _bulletType;
+	private int _nowBullet = 0;
 
 	//定数
 	private const float MAX_BULLET_POSITION_X = 9f;
@@ -28,6 +30,7 @@ public class BulletDirector
     {
 		//弾の生成数分の配列を確保する
 		_bulletArray = new GameObject[bulletCount];
+		_bulletColliderArray = new SelfCircleCollider[bulletCount];
 		_maxCount = bulletCount;
 		_bulletSpeed = bulletSpeed;
 		_bulletPool = pool;
@@ -46,10 +49,38 @@ public class BulletDirector
 			if (_bulletArray[i] is null)
 			{
 				_bulletArray[i] = bullet;
+				_bulletColliderArray[i] = bullet.GetComponent<SelfCircleCollider>();
+				_nowBullet++;
 				break;
 			}
 		}
     }
+
+	public void OnUpdate()
+    {
+		//弾が存在しない場合処理を行わない
+		if(_nowBullet == 0)
+        {
+			return;
+        }
+
+		for (int i = 0; i < _maxCount; i++)
+		{
+			if(_bulletArray[i] is null)
+            {
+				continue;
+            }
+
+			//衝突した弾の返却処理
+			if (_bulletColliderArray[i].IsCollsion)
+            {
+				_bulletColliderArray[i].IsCollsion = false;
+				_bulletPool.EnqueueObject(_bulletArray[i]);
+				_bulletArray[i] = null;
+				_bulletColliderArray[i] = null;
+			}
+		}
+	}
 
 	/// <summary>
 	/// 定期処理を行う
@@ -96,6 +127,8 @@ public class BulletDirector
 				{
 					_bulletPool.EnqueueObject(_bulletArray[i]);
 					_bulletArray[i] = null;
+					_bulletColliderArray[i] = null;
+					_nowBullet--;
 				}
 			}
 		}

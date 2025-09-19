@@ -26,4 +26,4 @@ MonoBehaviour:
   - 1.75
   _maxHP: 50
   _subEnemiesMaxHP: 9600000096000000
-  _speed: 0.1
+  _speed: 0.01

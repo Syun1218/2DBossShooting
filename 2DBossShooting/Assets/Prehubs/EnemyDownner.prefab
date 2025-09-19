@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7014108215469101301}
   - component: {fileID: 2930523638604937296}
+  - component: {fileID: 9022138309366761314}
   m_Layer: 0
   m_Name: EnemyDownner
   m_TagString: Untagged
@@ -84,3 +85,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &9022138309366761314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1821937375026258791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6e1e5af17b410d4994a535921659489, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -71,7 +71,7 @@ public class BulletData : ScriptableObject
     public enum BulletType
     {
         Straight,  //発射位置から横にまっすぐ飛ぶ
-        Homing,    //敵に向かってホーミングし一定時間で消滅する
+        Homing,    //敵に向かって一定時間ホーミングする
         Diffusion, //発射位置から拡散する
         Target,    //発射位置から敵に向かって直線で飛ぶ
     }

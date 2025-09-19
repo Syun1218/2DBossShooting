@@ -5,12 +5,16 @@ using System.Collections.Generic;
 /// <summary>
 /// 円形のコライダーとしての判定用データを持たせる
 /// </summary>
-public class SelfCircleCollider : MonoBehaviour
+public class SelfCircleCollider : MonoBehaviour,CollisionInterface
 {
 	#region 変数
 	private Vector2 _centerPoint;
 	private float _radius;
 	private ObjectType _myObjectType;
+    private CollisionInterface _myCollisionInterface;
+
+    //弾の衝突後処理用変数
+    private bool _isCollision = false;
 	#endregion
 
 	#region プロパティ
@@ -28,6 +32,23 @@ public class SelfCircleCollider : MonoBehaviour
         get { return _myObjectType; }
         set { _myObjectType = value; }
     }
+
+    public Vector2 CenterPoint
+    {
+        get { return _centerPoint; }
+    }
+
+    public CollisionInterface MyCollisionInterface
+    {
+        get { return _myCollisionInterface; }
+        set { _myCollisionInterface = value; }
+    }
+
+    public bool IsCollsion
+    {
+        get { return _isCollision; }
+        set { _isCollision = value; }
+    }
 	#endregion
 
 	#region メソッド
@@ -42,10 +63,25 @@ public class SelfCircleCollider : MonoBehaviour
 		EnemyBullet,   //エネミーの弾オブジェクト
     }
 
+    private void Awake()
+    {
+        _myCollisionInterface = this;
+    }
+
     public void FixedUpdate()
     {
         _centerPoint = gameObject.transform.position;
     }
+
+    /// <summary>
+    /// 衝突した弾をプールに返却する処理
+    /// </summary>
+    public void OnCollision(SelfCircleCollider.ObjectType otherType)
+    {
+        _isCollision = true;
+    }
+
+
     #endregion
 
     private void OnDrawGizmos()
