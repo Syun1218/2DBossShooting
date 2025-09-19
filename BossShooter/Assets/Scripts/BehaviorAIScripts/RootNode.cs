@@ -82,12 +82,12 @@ public class RootNode : NodeBace
         switch (_designer._nodeDatas[index].MyType)
         {
             case NodeCreateData.NodeType.Selector:
-                //returnNode = new SelectorNode();
-            break;
+                returnNode = new SelectorNode();
+                break;
 
             case NodeCreateData.NodeType.Sequence:
-                //returnNode = new SequenceNode();
-            break;
+                returnNode = new SequenceNode();
+                break;
 
             case NodeCreateData.NodeType.Action:
                 //returnNode = new ActionNode(_designer._nodeDatas[index].ActionNode);
