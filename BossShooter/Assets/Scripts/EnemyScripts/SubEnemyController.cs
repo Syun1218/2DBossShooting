@@ -2,15 +2,22 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// エネミーの部位の管理クラス
+/// </summary>
 public class SubEnemyController:CollisionInterface
 {
 	#region 変数
 	private GameObject _subEnemy;
 	private SelfCircleCollider _myCollider;
+	private bool _isLive = true;
 	#endregion
 
 	#region プロパティ
-
+	public bool IsLive
+    {
+        set { _isLive = value; }
+    }
 	#endregion
 
 	#region メソッド
@@ -21,6 +28,11 @@ public class SubEnemyController:CollisionInterface
 
 		//コライダーの設定を行う
 		_myCollider.MyCollisionInterface = this;
+
+		//AIを構築する
+
+
+		//この部位が生きている場合のみAIに処理を行わせる
     }
 
 	public void OnCollision(SelfCircleCollider.ObjectType otherType)

@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// エネミーの管理クラス
+/// </summary>
 public class EnemyController:CollisionInterface
 {
 	#region 変数
@@ -54,6 +57,7 @@ public class EnemyController:CollisionInterface
         }
 
 		//AIを構築する
+
     }
 
 	public void OnFixedUpdate()
