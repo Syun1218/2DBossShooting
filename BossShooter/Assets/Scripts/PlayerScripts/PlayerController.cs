@@ -22,6 +22,7 @@ public class PlayerController:CollisionInterface
     private ObjectPool _objectPool;
     private float _nowCoolTime;
     private BulletDirector _bulletDirector;
+    private bool _isInvicible = false;
     #endregion
 
     #region プロパティ
@@ -139,7 +140,11 @@ public class PlayerController:CollisionInterface
 
     public void OnCollision(SelfCircleCollider.ObjectType otherType)
     {
-        //残機を減らす
+        //無敵状態でなければ残機を減らす
+        if (!_isInvicible)
+        {
+
+        }
     }
     #endregion
 }

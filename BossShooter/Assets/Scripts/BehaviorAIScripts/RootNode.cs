@@ -83,11 +83,11 @@ public class RootNode : NodeBace
         {
             case NodeCreateData.NodeType.Selector:
                 returnNode = new SelectorNode();
-                break;
+            break;
 
             case NodeCreateData.NodeType.Sequence:
                 returnNode = new SequenceNode();
-                break;
+            break;
 
             case NodeCreateData.NodeType.Action:
                 //returnNode = new ActionNode(_designer._nodeDatas[index].ActionNode);

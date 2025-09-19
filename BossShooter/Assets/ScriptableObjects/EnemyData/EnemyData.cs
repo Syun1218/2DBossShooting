@@ -11,12 +11,18 @@ public class EnemyData : ScriptableObject
 	#region 変数
 	[SerializeField] private GameObject _enemy;
 	[SerializeField] private GameObject[] _subEnemies;
+
 	[SerializeField] private Vector2 _enemyInstancePosition;
 	[SerializeField] private Vector2[] _subEnemiesInstancePosition;
+
 	[SerializeField] private float _enemyColliderRadius;
 	[SerializeField] private float[] _subEnemiesColliderRadius;
+
 	[SerializeField] private int _maxHP;
 	[SerializeField] private int[] _subEnemiesMaxHP;
+
+    [SerializeField] private string _bulletAddress;
+    [SerializeField] private string[] _subEnemiesBulletAddress;
 
 	[SerializeField] private float _speed;
 	#endregion
@@ -88,6 +94,22 @@ public class EnemyData : ScriptableObject
 	public int[] SubEnemiesMaxHP
     {
         get { return _subEnemiesMaxHP; }
+    }
+
+    /// <summary>
+    /// エネミーの使用する弾のアドレス
+    /// </summary>
+    public string BulletAddress
+    {
+        get { return _bulletAddress; }
+    }
+
+    /// <summary>
+    /// エネミーの部位が使用する弾のアドレス
+    /// </summary>
+    public string[] SubEnemiesBulletAddress
+    {
+        get { return _subEnemiesBulletAddress; }
     }
 
     /// <summary>

@@ -20,6 +20,8 @@ public class PlayerData : ScriptableObject
     [SerializeField] private float _lowSpeed;
 
     [SerializeField] private float _shotCoolTime;
+
+    [SerializeField] private string _bulletAddress;
 	#endregion
 
 	#region プロパティ
@@ -31,11 +33,17 @@ public class PlayerData : ScriptableObject
         get { return _player; }
     }
 
+    /// <summary>
+    /// プレイヤーの生成される座標
+    /// </summary>
     public Vector2 PlayerInstancePosition
     {
         get { return _playerInstancePosition; }
     }
 
+    /// <summary>
+    /// プレイヤーのコライダーの半径
+    /// </summary>
     public float PlayerColliderRadius
     {
         get { return _playerColliderRadius; }
@@ -79,6 +87,14 @@ public class PlayerData : ScriptableObject
     public float ShotCoolTime
     {
         get { return _shotCoolTime; }
+    }
+
+    /// <summary>
+    /// 使用する弾のアドレス
+    /// </summary>
+    public string BulletAddress
+    {
+        get { return _bulletAddress; }
     }
 	#endregion
 }

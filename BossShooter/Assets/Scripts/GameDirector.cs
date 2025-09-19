@@ -55,7 +55,7 @@ public class GameDirector : MonoBehaviour
         //スクリプタブルオブジェクトをロードする
         _loadPlayerData = Addressables.LoadAssetAsync<PlayerData>("PlayerData");
         _playerData = _loadPlayerData.WaitForCompletion();
-        _loadBulletData = Addressables.LoadAssetAsync<BulletData>("PlayerBullet");
+        _loadBulletData = Addressables.LoadAssetAsync<BulletData>(_playerData.BulletAddress);
         _playerBulletData = _loadBulletData.WaitForCompletion();
         _loadEnemyData = Addressables.LoadAssetAsync<EnemyData>("BossData");
         _enemyData = _loadEnemyData.WaitForCompletion();

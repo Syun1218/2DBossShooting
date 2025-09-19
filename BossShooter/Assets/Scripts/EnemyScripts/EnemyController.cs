@@ -20,8 +20,8 @@ public class EnemyController:CollisionInterface
 	private int _hp;
 
 	//定数
-	private const float MAX_Y_POSITION = 0.2f;
-	private const float MIN_Y_POSITION = -0.9f;
+	private const float MAX_Y_POSITION = 1.1f;
+	private const float MIN_Y_POSITION = -1.1f;
 	#endregion
 
 	#region プロパティ

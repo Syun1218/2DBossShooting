@@ -16,8 +16,8 @@ public class PlayerMove
 	//移動制限定数
 	private const float MAX_X_POSITION = 8.4f;
 	private const float MIN_X_POSITION = -8.4f;
-	private const float MAX_Y_POSITION = 3.6f;
-	private const float MIN_Y_POSITION = -4.3f;
+	private const float MAX_Y_POSITION = 4.7f;
+	private const float MIN_Y_POSITION = -4.7f;
 	#endregion
 
 	#region プロパティ
