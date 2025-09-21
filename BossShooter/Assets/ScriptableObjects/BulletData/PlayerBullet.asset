@@ -17,3 +17,4 @@ MonoBehaviour:
   _instanceCount: 20
   _bulletSpeed: 0.3
   _bulletColliderRadius: 0.15
+  _bulletObjectType: 1

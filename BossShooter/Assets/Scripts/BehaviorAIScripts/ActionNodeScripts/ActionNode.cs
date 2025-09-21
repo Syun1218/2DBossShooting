@@ -19,8 +19,10 @@ public class ActionNode : NodeBace
 	#region メソッド  
 	public enum ActionType
     {
-		Idol,   //プレイヤー未発見時の待機
-		Shot,   //プレイヤー発見時の攻撃
+		Idol,           //プレイヤー未発見時の待機
+		HomingShot,     //プレイヤーを追跡する弾を発射
+        DiffusionShot,  //拡散する弾を発射
+        TargetShot,     //プレイヤーのいる位置に直進する弾を発射
     }
 
 	public ActionNode(ActionType action)
@@ -31,18 +33,27 @@ public class ActionNode : NodeBace
         switch (_myAction)
         {
 			case ActionType.Idol:
-                //_myControll = new OnIdol();
-			break;
+                _myControll = new OnIdol();
+            break;
 
-			case ActionType.Shot:
-                //_myControll = new OnShot();
-			break;
-        }
+			case ActionType.HomingShot:
+                _myControll = new OnHomingShot();
+            break;
+
+            case ActionType.DiffusionShot:
+            _myControll = new OnDiffusionShot();
+            break;
+
+            case ActionType.TargetShot:
+            _myControll = new  OnTargetShot();
+            break;
+        } 
     }
 
     public override void OnStart()
     {
         _myControll.Owner = _aiOwner;
+        _myControll.EnemyData = _enemyData;
 
         _myControll.Initialized();
     }

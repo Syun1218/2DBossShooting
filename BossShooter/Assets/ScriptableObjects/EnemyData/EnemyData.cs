@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 /// <summary>
 /// 敵キャラのデータクラス
@@ -9,22 +10,26 @@ using System.Collections.Generic;
 public class EnemyData : ScriptableObject
 {
 	#region 変数
-	[SerializeField] private GameObject _enemy;
-	[SerializeField] private GameObject[] _subEnemies;
+	[SerializeField] [Header("エネミーオブジェクト")] private GameObject _enemy;
+	[SerializeField] [Header("エネミーの部位オブジェクト")] private GameObject[] _subEnemies;
 
-	[SerializeField] private Vector2 _enemyInstancePosition;
-	[SerializeField] private Vector2[] _subEnemiesInstancePosition;
+	[SerializeField] [Header("エネミーの生成座標")] private Vector2 _enemyInstancePosition;
+	[SerializeField] [Header("エネミーの部位の生成座標")] private Vector2[] _subEnemiesInstancePosition;
 
-	[SerializeField] private float _enemyColliderRadius;
-	[SerializeField] private float[] _subEnemiesColliderRadius;
+	[SerializeField] [Header("エネミーのコライダーの半径")] private float _enemyColliderRadius;
+	[SerializeField] [Header("エネミーの部位のコライダーの半径")] private float[] _subEnemiesColliderRadius;
 
-	[SerializeField] private int _maxHP;
-	[SerializeField] private int[] _subEnemiesMaxHP;
+	[SerializeField] [Header("エネミーの最大体力")] private int _maxHP;
+	[SerializeField] [Header("エネミーの部位の最大体力")] private int[] _subEnemiesMaxHP;
 
-    [SerializeField] private string _bulletAddress;
-    [SerializeField] private string[] _subEnemiesBulletAddress;
+    [SerializeField] [Header("エネミーが使用する全ての弾のアドレス")] private string[] _bulletAddresses;
+    [SerializeField] [Header("エネミーの部位が使用する弾のアドレス")] private string[] _subEnemiesBulletAddress;
 
-	[SerializeField] private float _speed;
+    [SerializeField] [Header("エネミーのAI")] private NodeTreeDesigner _treeDesigner;
+    [SerializeField][Header("エネミーの部位のAI")] private NodeTreeDesigner[] _subEnemyTreeDesigners;
+
+	[SerializeField] [Header("エネミーの上下移動速度")] private float _speed;
+    [SerializeField] [Header("エネミーの攻撃間隔")] private float _idolTime;
 	#endregion
 
 	#region プロパティ
@@ -99,9 +104,9 @@ public class EnemyData : ScriptableObject
     /// <summary>
     /// エネミーの使用する弾のアドレス
     /// </summary>
-    public string BulletAddress
+    public string[] BulletAddress
     {
-        get { return _bulletAddress; }
+        get { return _bulletAddresses; }
     }
 
     /// <summary>
@@ -113,11 +118,35 @@ public class EnemyData : ScriptableObject
     }
 
     /// <summary>
+    /// エネミーのAI
+    /// </summary>
+    public NodeTreeDesigner TreeDesigner
+    {
+        get { return _treeDesigner; }
+    }
+
+    /// <summary>
+    /// エネミーの部位のAI
+    /// </summary>
+    public NodeTreeDesigner[] SubEnemyTreeDesigners
+    {
+        get { return _subEnemyTreeDesigners; }
+    }
+
+    /// <summary>
     /// エネミーの移動速度
     /// </summary>
     public float Speed
     {
         get { return _speed; }
+    }
+
+    /// <summary>
+    /// 攻撃間隔
+    /// </summary>
+    public float IdolTime
+    {
+        get { return _idolTime; }
     }
 	#endregion
 }

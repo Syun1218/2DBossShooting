@@ -11,6 +11,7 @@ public class SubEnemyController:CollisionInterface
 	private GameObject _subEnemy;
 	private SelfCircleCollider _myCollider;
 	private bool _isLive = true;
+	private RootNode _root;
 	#endregion
 
 	#region プロパティ
@@ -21,7 +22,7 @@ public class SubEnemyController:CollisionInterface
 	#endregion
 
 	#region メソッド
-	public SubEnemyController(GameObject subEnemy,SelfCircleCollider collider)
+	public SubEnemyController(GameObject subEnemy,SelfCircleCollider collider,NodeTreeDesigner designer,EnemyData data)
     {
 		_subEnemy = subEnemy;
 		_myCollider = collider;
@@ -30,7 +31,7 @@ public class SubEnemyController:CollisionInterface
 		_myCollider.MyCollisionInterface = this;
 
 		//AIを構築する
-
+		//_root = new RootNode(designer, subEnemy,data);
 
 		//この部位が生きている場合のみAIに処理を行わせる
     }

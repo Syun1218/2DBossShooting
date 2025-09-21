@@ -9,19 +9,19 @@ using System.Collections.Generic;
 public class PlayerData : ScriptableObject
 {
     #region 変数
-    [SerializeField] private GameObject _player;
-    [SerializeField] private Vector2 _playerInstancePosition;
-    [SerializeField] private float _playerColliderRadius;
+    [SerializeField] [Header("プレイヤーオブジェクト")] private GameObject _player;
+    [SerializeField] [Header("プレイヤーの生成座標")] private Vector2 _playerInstancePosition;
+    [SerializeField] [Header("プレイヤーのコライダーの半径")] private float _playerColliderRadius;
 
-    [SerializeField] private int _maxLife;
-    [SerializeField] private int _maxBomb;
+    [SerializeField] [Header("プレイヤーの最大残機")] private int _maxLife;
+    [SerializeField] [Header("プレイヤーの最大ボム所持数")] private int _maxBomb;
 
-    [SerializeField] private float _normalSpeed;
-    [SerializeField] private float _lowSpeed;
+    [SerializeField] [Header("プレイヤーの通常移動速度")] private float _normalSpeed;
+    [SerializeField] [Header("プレイヤーの低速移動速度")] private float _lowSpeed;
 
-    [SerializeField] private float _shotCoolTime;
+    [SerializeField] [Header("プレイヤーの弾発射間隔")] private float _shotCoolTime;
 
-    [SerializeField] private string _bulletAddress;
+    [SerializeField] [Header("プレイヤーの弾のアドレス")] private string _bulletAddress;
 	#endregion
 
 	#region プロパティ

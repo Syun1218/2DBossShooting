@@ -26,8 +26,16 @@ MonoBehaviour:
   - 1.75
   _maxHP: 50
   _subEnemiesMaxHP: 9600000096000000
-  _bulletAddress: Homing
+  _bulletAddresses:
+  - Homing
+  - Diffusion
+  - Target
   _subEnemiesBulletAddress:
   - Diffusion
   - Target
+  _treeDesigner: {fileID: 11400000, guid: 1542813044ee6cb4091018a81f322b35, type: 2}
+  _subEnemyTreeDesigners:
+  - {fileID: 11400000, guid: 6ddebbcd32264914f8d42b56d662d799, type: 2}
+  - {fileID: 11400000, guid: 947403a76b6b7a84a86b2f3a8b11ab1e, type: 2}
   _speed: 0.01
+  _idolTime: 2

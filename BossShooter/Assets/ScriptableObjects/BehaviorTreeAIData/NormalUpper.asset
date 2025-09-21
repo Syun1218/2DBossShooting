@@ -10,11 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 268bc8daa97a54840a6fe87e4cd6652d, type: 3}
-  m_Name: NormalEnemyAI
+  m_Name: NormalUpper
   m_EditorClassIdentifier: 
-  _nodeDatas:
-  - _nodeName: 
-    _myType: 0
-    _nodeID: 0
-    _parentID: 0
-    _actionType: 0
+  _nodeDatas: []

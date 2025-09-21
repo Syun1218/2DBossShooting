@@ -18,6 +18,11 @@ public class EnemyController:CollisionInterface
 	private Vector2 _parentPosition;
 	private bool _isUp = true;
 	private int _hp;
+	private NodeBace.NodeState _state;
+
+	//AI用変数
+	private RootNode _root;
+	private bool _isStart = true;
 
 	//定数
 	private const float MAX_Y_POSITION = 1.1f;
@@ -53,17 +58,34 @@ public class EnemyController:CollisionInterface
 			_subEnemyCollider.Radius = _enemyData.SubEnemyColliderRadius[i];
 			_subEnemyCollider.MyObjectType = SelfCircleCollider.ObjectType.Enemy;
 			CheckSelfCollider.Instance.SetColliderObject(_subEnemies[i]);
-			_subEnemyControllers[i] = new SubEnemyController(_subEnemies[i],_subEnemyCollider);
+			_subEnemyControllers[i] = new SubEnemyController(_subEnemies[i], _subEnemyCollider, _enemyData.SubEnemyTreeDesigners[i],_enemyData);
         }
 
 		//AIを構築する
-
+		_root = new RootNode(_enemyData.TreeDesigner, _enemy,_enemyData);
     }
 
 	public void OnFixedUpdate()
     {
-		//エネミーを上下に移動させる
-		_parentPosition = _enemyParent.transform.position;
+		//AIのスタートメソッドをまだ起動していない場合、起動する
+		if (_isStart)
+		{
+			_root.OnStart();
+			_isStart = false;
+		}
+
+        //AIのアクションを実行させる
+        _state = _root.OnUpdate();
+
+		//アクションの成否を判定したら、終了処理を呼ぶ
+		if(_state != NodeBace.NodeState.Running)
+		{
+			_root.OnEnd();
+			_isStart = true;
+		}
+
+        //エネミーを上下に移動させる
+        _parentPosition = _enemyParent.transform.position;
 
         if (_isUp)
         {

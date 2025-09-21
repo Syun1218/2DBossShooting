@@ -8,9 +8,14 @@ using System.Collections.Generic;
 public class NodeBace
 {
 	#region 変数
+	protected EnemyData _enemyData;
+	protected int _index = -1;
 	protected List<NodeBace> _childNodes = new List<NodeBace>();
 	protected NodeBace _childNode;
 	protected GameObject _aiOwner;
+
+	//定数
+	protected const int DEFAULT_INDEX = -1;
     #endregion
 
     #region プロパティ
@@ -29,6 +34,16 @@ public class NodeBace
     {
         set { _aiOwner = value; }
     }
+
+	public EnemyData EnemyData
+	{
+		set { _enemyData = value; }
+	}
+
+	public int Index
+	{
+		set { _index = value; }
+	}
     #endregion
 
     #region メソッド

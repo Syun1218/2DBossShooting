@@ -6,12 +6,12 @@ using System.Collections.Generic;
 public class BulletData : ScriptableObject
 {
 	#region 変数
-	[SerializeField] private GameObject _bullet;
-    [SerializeField] private BulletType _myType;
-	[SerializeField] private int _instanceCount;
-	[SerializeField] private float _bulletSpeed;
-	[SerializeField] private float _bulletColliderRadius;
-	private SelfCircleCollider.ObjectType _bulletObjectType = SelfCircleCollider.ObjectType.PlayerBullet;
+	[SerializeField] [Header("弾オブジェクト")] private GameObject _bullet;
+    [SerializeField] [Header("弾の挙動のタイプ")] private BulletType _myType;
+	[SerializeField] [Header("弾の生成個数")] private int _instanceCount;
+	[SerializeField] [Header("弾の速度")] private float _bulletSpeed;
+	[SerializeField] [Header("弾のコライダーの半径")] private float _bulletColliderRadius;
+	[SerializeField] [Header("弾の判定の種類")] private SelfCircleCollider.ObjectType _bulletObjectType;
 	#endregion
 
 	#region プロパティ

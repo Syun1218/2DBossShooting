@@ -20,7 +20,7 @@ public class RootNode : NodeBace
 	#endregion
 
 	#region メソッド  
-	public RootNode(NodeTreeDesigner designer,GameObject aiOwner)
+	public RootNode(NodeTreeDesigner designer,GameObject aiOwner,EnemyData data,int index = -1)
     {
 		//ツリー構造とAIを保持するオブジェクトを取得
 		_designer = designer;
@@ -34,6 +34,8 @@ public class RootNode : NodeBace
 			//ノードを実体化させる
 			_allNodes.Add(InstanceNode(i));
 			_allNodes[i].AIOwner = _aiOwner;
+			_allNodes[i].EnemyData = data;
+			_allNodes[i].Index = index;
 			parentID = _designer._nodeDatas[i].ParentID;
 
 			//親ノードがルートノードの場合、親設定の処理をスキップする
@@ -90,8 +92,8 @@ public class RootNode : NodeBace
             break;
 
             case NodeCreateData.NodeType.Action:
-                //returnNode = new ActionNode(_designer._nodeDatas[index].ActionNode);
-            break;
+				returnNode = new ActionNode(_designer._nodeDatas[index].ActionNode);
+				break;
 
             case NodeCreateData.NodeType.Condition:
                 //returnNode = new ConditionNode(_designer._nodeDatas[index].ConditionNode);

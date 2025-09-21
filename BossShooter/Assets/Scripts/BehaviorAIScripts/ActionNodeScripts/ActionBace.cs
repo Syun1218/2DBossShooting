@@ -9,6 +9,7 @@ public class ActionBace
 {
 	#region 変数
 	protected GameObject _owner;
+	protected EnemyData _enemyData;
 	#endregion
 
 	#region プロパティ
@@ -16,6 +17,11 @@ public class ActionBace
     {
         set { _owner = value; }
     }
+
+	public EnemyData EnemyData
+	{
+		set { _enemyData = value; }
+	}
 	#endregion
 
 	#region メソッド
@@ -24,7 +30,7 @@ public class ActionBace
 	/// </summary>
 	public virtual void Initialized()
     {
-
+		//処理は継承先で記述
     }
 
 	/// <summary>
@@ -32,7 +38,8 @@ public class ActionBace
 	/// </summary>
 	public virtual NodeBace.NodeState OnAction()
     {
-		return NodeBace.NodeState.Running;
+        //処理は継承先で記述
+        return NodeBace.NodeState.Running;
     }
 
 	/// <summary>
@@ -40,7 +47,7 @@ public class ActionBace
 	/// </summary>
 	public virtual void End()
     {
-
+        //処理は継承先で記述
     }
-	#endregion
+    #endregion
 }

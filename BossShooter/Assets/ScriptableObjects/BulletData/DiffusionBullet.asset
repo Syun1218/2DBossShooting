@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 268bc8daa97a54840a6fe87e4cd6652d, type: 3}
-  m_Name: NormalEnemyAI
+  m_Script: {fileID: 11500000, guid: 68fb17c3609ea5b4c90fc91e7dcd3448, type: 3}
+  m_Name: DiffusionBullet
   m_EditorClassIdentifier: 
-  _nodeDatas:
-  - _nodeName: 
-    _myType: 0
-    _nodeID: 0
-    _parentID: 0
-    _actionType: 0
+  _bullet: {fileID: 0}
+  _myType: 2
+  _instanceCount: 30
+  _bulletSpeed: 0.3
+  _bulletColliderRadius: 0.15
+  _bulletObjectType: 3

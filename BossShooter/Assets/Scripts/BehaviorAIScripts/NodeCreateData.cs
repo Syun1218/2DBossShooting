@@ -11,12 +11,12 @@ public class NodeCreateData
 	[SerializeField] private NodeType _myType;
 	[SerializeField] private int _nodeID;
 	[SerializeField] private int _parentID;
-    //[SerializeField] private ActionNode.ActionType _actionType;
+    [SerializeField] private ActionNode.ActionType _actionType;
     //[SerializeField] private ConditionNode.ConditionType _conditionType;
     #endregion
 
     #region プロパティ
-	public string NodeName
+    public string NodeName
     {
         get { return _nodeName; }
     }
@@ -36,10 +36,10 @@ public class NodeCreateData
         get { return _parentID; }
     }
 
-    //public ActionNode.ActionType ActionNode
-    //{
-    //    get { return _actionType; }
-    //}
+    public ActionNode.ActionType ActionNode
+    {
+        get { return _actionType; }
+    }
 
     //public ConditionNode.ConditionType ConditionNode
     //{
