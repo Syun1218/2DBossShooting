@@ -22,8 +22,9 @@ public class EnemyData : ScriptableObject
 	[SerializeField] [Header("エネミーの最大体力")] private int _maxHP;
 	[SerializeField] [Header("エネミーの部位の最大体力")] private int[] _subEnemiesMaxHP;
 
-    [SerializeField] [Header("エネミーが使用する全ての弾のアドレス")] private string[] _bulletAddresses;
-    [SerializeField] [Header("エネミーの部位が使用する弾のアドレス")] private string[] _subEnemiesBulletAddress;
+    [SerializeField] [Header("エネミーが使用するホーミング弾のデータ")] private BulletData _homingBulletData;
+    [SerializeField] [Header("エネミーが使用する拡散弾のデータ")] private BulletData _diffusionBulletData;
+    [SerializeField] [Header("エネミーが使用するプレイヤー狙いの弾のデータ")] private BulletData _targetBulletData;
 
     [SerializeField] [Header("エネミーのAI")] private NodeTreeDesigner _treeDesigner;
     [SerializeField][Header("エネミーの部位のAI")] private NodeTreeDesigner[] _subEnemyTreeDesigners;
@@ -102,19 +103,27 @@ public class EnemyData : ScriptableObject
     }
 
     /// <summary>
-    /// エネミーの使用する弾のアドレス
+    /// ホーミング弾のデータ
     /// </summary>
-    public string[] BulletAddress
+    public BulletData HomingBulletData
     {
-        get { return _bulletAddresses; }
+        get { return _homingBulletData; }
     }
 
     /// <summary>
-    /// エネミーの部位が使用する弾のアドレス
+    /// 拡散弾のデータ
     /// </summary>
-    public string[] SubEnemiesBulletAddress
+    public BulletData DiffusionBulletData
     {
-        get { return _subEnemiesBulletAddress; }
+        get { return _diffusionBulletData; }
+    }
+
+    /// <summary>
+    /// プレイヤー狙いの弾のデータ
+    /// </summary>
+    public BulletData TargetBulletData
+    {
+        get { return _targetBulletData; }
     }
 
     /// <summary>

@@ -13,6 +13,7 @@ public class NodeBace
 	protected List<NodeBace> _childNodes = new List<NodeBace>();
 	protected NodeBace _childNode;
 	protected GameObject _aiOwner;
+	protected EnemyBulletPools _pools;
 
 	//定数
 	protected const int DEFAULT_INDEX = -1;
@@ -44,6 +45,11 @@ public class NodeBace
 	{
 		set { _index = value; }
 	}
+
+	public EnemyBulletPools Pools
+    {
+        set { _pools = value; }
+    }
     #endregion
 
     #region メソッド

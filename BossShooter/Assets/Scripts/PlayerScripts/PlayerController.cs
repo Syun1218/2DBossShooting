@@ -23,6 +23,16 @@ public class PlayerController:CollisionInterface
     private float _nowCoolTime;
     private BulletDirector _bulletDirector;
     private bool _isInvicible = false;
+    private int _myLife = 0;
+    private int _myBomb = 0;
+    private bool _isDeath = false;
+    private float _nowRespawnTime = 0;
+    private float _nowInvicibleTime = 0;
+
+    //定数
+    private readonly Vector2 _deathPoint = new Vector2(80, 0);
+    private const float RESPAWN_TARGET_TIME = 0.75f;
+    private const float INVICIBLE_TARGET_TIME = 3f;
     #endregion
 
     #region プロパティ
@@ -36,6 +46,10 @@ public class PlayerController:CollisionInterface
         _playerData = data;
         _playerBulletData = bulletData; 
         _player = player;
+
+        //残機とボムをセットする
+        _myLife = _playerData.MaxLife;
+        _myBomb = _playerData.MaxBomb;
 
         //プレイヤーコライダーの設定を行い、衝突判定の対象にする
         _playerCollider = _player.GetComponent<SelfCircleCollider>();
@@ -58,7 +72,7 @@ public class PlayerController:CollisionInterface
         _actions.Player.Shot.canceled += OnShot;
 
         //弾のプールを生成
-        _objectPool = new ObjectPool(_playerBulletData.Bullet, _playerBulletData.InstanceCount,_playerBulletData.BulletColliderRadius,_playerBulletData.BulletObjectType);
+        _objectPool = new ObjectPool(_playerBulletData.Bullet, _playerBulletData.InstanceCount,_playerBulletData.BulletColliderRadius,_playerBulletData.BulletObjectType,BulletData.BulletType.Straight);
         _bulletDirector = new BulletDirector(_playerBulletData.InstanceCount,_playerBulletData.BulletSpeed,_objectPool,_playerBulletData.MyType);
 
         //アクションクラスのインスタンスを生成
@@ -73,6 +87,42 @@ public class PlayerController:CollisionInterface
 
     public void OnUpdate()
     {
+        //死亡している場合、リスポーンまで待機し、リスポーン後に無敵状態となる
+        if (_isDeath)
+        {
+            _nowRespawnTime += Time.deltaTime;
+            if(_nowRespawnTime >= RESPAWN_TARGET_TIME)
+            {
+                //無敵状態でリスポーンさせる
+                _isDeath = false;
+                _isInvicible = true;
+                _nowRespawnTime = 0;
+                _player.transform.position = _playerData.PlayerInstancePosition;
+            }
+        }
+
+        //無敵状態が切れるまでをカウントする
+        if (_isInvicible)
+        {
+            _nowInvicibleTime += Time.deltaTime;
+            if(_nowInvicibleTime >= INVICIBLE_TARGET_TIME)
+            {
+                _isInvicible = false;
+                _nowInvicibleTime = 0;
+            }
+        }
+
+        //死亡していない場合現在のプレイヤーの座標をデータに渡し、死亡中の場合、リスポーンポイントを渡す
+        if (_isDeath)
+        {
+            GameDirector.Instance.CurrentData.PlayerPosition = _playerData.PlayerInstancePosition;
+            return;
+        }
+        else
+        {
+            GameDirector.Instance.CurrentData.PlayerPosition = _player.transform.position;
+        }
+
         //ショット操作がされているかつクールタイムが明けている場合、弾を発射する
         if (_canShot && _inputShot)
         {
@@ -95,6 +145,12 @@ public class PlayerController:CollisionInterface
 
     public void OnFixedUpdata()
     {
+        //死亡時には処理をしない
+        if (_isDeath)
+        {
+            return;
+        }
+
         _playerMove.MovePlayer(_isRawSpeed, _moveValue);
         _bulletDirector.OnFixedUpdate();
     }
@@ -140,10 +196,18 @@ public class PlayerController:CollisionInterface
 
     public void OnCollision(SelfCircleCollider.ObjectType otherType)
     {
-        //無敵状態でなければ残機を減らす
-        if (!_isInvicible)
+        //無敵状態でないかつ生きているなら残機を減らす
+        if (!_isInvicible && !_isDeath)
         {
+            _myLife--;
+            _player.transform.position = _deathPoint;
+            _isDeath = true;
 
+            //残機がゼロ未満になったら、ゲームオーバーになる
+            if(0 > _myLife)
+            {
+                GameDirector.Instance.OverGame();
+            }
         }
     }
     #endregion

@@ -10,6 +10,12 @@ public class ActionBace
 	#region 変数
 	protected GameObject _owner;
 	protected EnemyData _enemyData;
+	protected EnemyBulletPools _pools;
+	protected int _index;
+	protected Vector2 _shotInstancePosition;
+
+	//定数
+	protected const int DEFAULT_INDEX = -1;
 	#endregion
 
 	#region プロパティ
@@ -22,6 +28,16 @@ public class ActionBace
 	{
 		set { _enemyData = value; }
 	}
+
+	public EnemyBulletPools Pools
+    {
+        set { _pools = value; }
+    }
+
+	public int Index
+    {
+        set { _index = value; }
+    }
 	#endregion
 
 	#region メソッド
@@ -49,5 +65,21 @@ public class ActionBace
     {
         //処理は継承先で記述
     }
+
+	/// <summary>
+	/// 弾の発射座標を返す
+	/// </summary>
+	protected void GetShotPosition()
+    {
+		//インデックスが-1なら本体座標を、違うなら配列にインデックスを入れた際の値を発射座標とする
+		if (_index == DEFAULT_INDEX)
+		{
+			_shotInstancePosition = GameDirector.Instance.CurrentData.EnemyCorePosition;
+		}
+		else
+		{
+			_shotInstancePosition = GameDirector.Instance.CurrentData.SubEnemiesPosition[_index];
+		}
+	}
     #endregion
 }

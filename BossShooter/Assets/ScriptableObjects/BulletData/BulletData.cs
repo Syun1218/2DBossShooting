@@ -12,6 +12,7 @@ public class BulletData : ScriptableObject
 	[SerializeField] [Header("弾の速度")] private float _bulletSpeed;
 	[SerializeField] [Header("弾のコライダーの半径")] private float _bulletColliderRadius;
 	[SerializeField] [Header("弾の判定の種類")] private SelfCircleCollider.ObjectType _bulletObjectType;
+	[SerializeField] [Header("弾の破壊時のスコア")] private int _bulletScore;
 	#endregion
 
 	#region プロパティ
@@ -61,6 +62,11 @@ public class BulletData : ScriptableObject
     public SelfCircleCollider.ObjectType BulletObjectType
     {
         get { return _bulletObjectType; }
+    }
+
+    public int BulletScore
+    {
+        get { return _bulletScore; }
     }
     #endregion
 

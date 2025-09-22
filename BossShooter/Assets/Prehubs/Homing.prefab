@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6705633522921818458}
   - component: {fileID: 226807165254437870}
+  - component: {fileID: -6640133882917581383}
   m_Layer: 0
   m_Name: Homing
   m_TagString: Untagged
@@ -84,3 +85,15 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-6640133882917581383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5588461784803856094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6e1e5af17b410d4994a535921659489, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

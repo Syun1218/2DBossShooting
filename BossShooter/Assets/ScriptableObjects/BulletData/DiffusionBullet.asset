@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68fb17c3609ea5b4c90fc91e7dcd3448, type: 3}
   m_Name: DiffusionBullet
   m_EditorClassIdentifier: 
-  _bullet: {fileID: 0}
+  _bullet: {fileID: 9204960005296712066, guid: ab4a8715049047947b3ad9942d64e8e7, type: 3}
   _myType: 2
   _instanceCount: 30
   _bulletSpeed: 0.3
   _bulletColliderRadius: 0.15
   _bulletObjectType: 3
+  _bulletScore: 50

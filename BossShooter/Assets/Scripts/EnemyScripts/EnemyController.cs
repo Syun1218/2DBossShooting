@@ -20,6 +20,9 @@ public class EnemyController:CollisionInterface
 	private int _hp;
 	private NodeBace.NodeState _state;
 
+	//弾のプール管理変数
+	private EnemyBulletPools _pools;
+
 	//AI用変数
 	private RootNode _root;
 	private bool _isStart = true;
@@ -43,12 +46,23 @@ public class EnemyController:CollisionInterface
 		_enemyData = data;
 		_hp = _enemyData.MaxHP;
 
+		//弾のプールを生成する
+		_pools = new EnemyBulletPools(_enemyData);
+
+		//弾の管理用クラスをデータに格納
+		GameDirector.Instance.CurrentData.HomingDirector = new BulletDirector(_enemyData.HomingBulletData.InstanceCount, _enemyData.HomingBulletData.BulletSpeed,_pools.HomingPool ,_enemyData.HomingBulletData.MyType);
+		GameDirector.Instance.CurrentData.DiffusionDirector = new BulletDirector(_enemyData.DiffusionBulletData.InstanceCount, _enemyData.DiffusionBulletData.BulletSpeed,_pools.DiffusionPool ,_enemyData.DiffusionBulletData.MyType);
+		GameDirector.Instance.CurrentData.TargetDirector = new BulletDirector(_enemyData.TargetBulletData.InstanceCount, _enemyData.TargetBulletData.BulletSpeed,_pools.TargetPool ,_enemyData.TargetBulletData.MyType);
+
 		//エネミーを衝突判定の対象に加える
 		_enemyCollider = _enemy.GetComponent<SelfCircleCollider>();
 		_enemyCollider.Radius = _enemyData.EnemyColliderRadius;
 		_enemyCollider.MyObjectType = SelfCircleCollider.ObjectType.Enemy;
 		_enemyCollider.MyCollisionInterface = this;
 		CheckSelfCollider.Instance.SetColliderObject(_enemy);
+
+		//ゲームデータを更新
+		GameDirector.Instance.CurrentData.SubEnemiesPosition = new Vector2[_subEnemies.Length];
 
 		//エネミーの各部位ごとに衝突判定の対象に加え、コントローラーを設定
 		_subEnemyControllers = new SubEnemyController[_subEnemies.Length];
@@ -58,12 +72,28 @@ public class EnemyController:CollisionInterface
 			_subEnemyCollider.Radius = _enemyData.SubEnemyColliderRadius[i];
 			_subEnemyCollider.MyObjectType = SelfCircleCollider.ObjectType.Enemy;
 			CheckSelfCollider.Instance.SetColliderObject(_subEnemies[i]);
-			_subEnemyControllers[i] = new SubEnemyController(_subEnemies[i], _subEnemyCollider, _enemyData.SubEnemyTreeDesigners[i],_enemyData);
+			_subEnemyControllers[i] = new SubEnemyController(_subEnemies[i], _subEnemyCollider, _enemyData.SubEnemyTreeDesigners[i],_enemyData,_pools,i);
         }
 
 		//AIを構築する
-		_root = new RootNode(_enemyData.TreeDesigner, _enemy,_enemyData);
+		_root = new RootNode(_enemyData.TreeDesigner, _enemy,_enemyData,_pools);
     }
+
+	public void OnUpdate()
+    {
+		//ゲームデータを更新
+		GameDirector.Instance.CurrentData.EnemyCorePosition = _enemy.transform.position;
+
+		for(int i = 0;i < _subEnemies.Length; i++)
+        {
+			GameDirector.Instance.CurrentData.SubEnemiesPosition[i] = _subEnemies[i].transform.position;
+        }
+
+		//弾管理オブジェクトを作動させる
+		GameDirector.Instance.CurrentData.HomingDirector.OnUpdate();
+		GameDirector.Instance.CurrentData.DiffusionDirector.OnUpdate();
+		GameDirector.Instance.CurrentData.TargetDirector.OnUpdate();
+	}
 
 	public void OnFixedUpdate()
     {
@@ -73,6 +103,11 @@ public class EnemyController:CollisionInterface
 			_root.OnStart();
 			_isStart = false;
 		}
+
+		//弾管理オブジェクトを作動させる
+		GameDirector.Instance.CurrentData.HomingDirector.OnFixedUpdate();
+		GameDirector.Instance.CurrentData.DiffusionDirector.OnFixedUpdate();
+		GameDirector.Instance.CurrentData.TargetDirector.OnFixedUpdate();
 
         //AIのアクションを実行させる
         _state = _root.OnUpdate();
@@ -118,7 +153,7 @@ public class EnemyController:CollisionInterface
 			//体力がゼロなった場合、進行スクリプトに通知する
 			if(0 >= _hp)
             {
-				GameDirector.Instance.KilledBoss();
+				GameDirector.Instance.OverGame();
             }
 		}
 	}

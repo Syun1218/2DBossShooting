@@ -13,10 +13,13 @@ public class GameDirector : MonoBehaviour
     #region 変数
     //進行変数
     private static GameDirector _instance;
+    private GameCurrentData _currentData;
+
+    //UI変数
+    private ScoreDirector _scoreDirector;
 
     //プレイヤー変数
     private AsyncOperationHandle<PlayerData> _loadPlayerData;
-    private AsyncOperationHandle<BulletData> _loadBulletData;
     private PlayerController _playerController;
     private PlayerData _playerData;
     private BulletData _playerBulletData;
@@ -36,6 +39,17 @@ public class GameDirector : MonoBehaviour
     {
         get { return _instance; }
     }
+
+    public GameCurrentData CurrentData
+    {
+        get { return _currentData; }
+        set { _currentData = value; }
+    }
+
+    public ScoreDirector ScoreDirector
+    {
+        get { return _scoreDirector; }
+    }
     #endregion
 
     #region メソッド
@@ -52,11 +66,16 @@ public class GameDirector : MonoBehaviour
             return;
         }
 
+        //データ保存用クラスを生成する
+        _currentData = new GameCurrentData();
+
+        //UIクラスを生成する
+        _scoreDirector = new ScoreDirector();
+
         //スクリプタブルオブジェクトをロードする
         _loadPlayerData = Addressables.LoadAssetAsync<PlayerData>("PlayerData");
         _playerData = _loadPlayerData.WaitForCompletion();
-        _loadBulletData = Addressables.LoadAssetAsync<BulletData>(_playerData.BulletAddress);
-        _playerBulletData = _loadBulletData.WaitForCompletion();
+        _playerBulletData = _playerData.BulletData;
         _loadEnemyData = Addressables.LoadAssetAsync<EnemyData>("BossData");
         _enemyData = _loadEnemyData.WaitForCompletion();
 
@@ -82,6 +101,7 @@ public class GameDirector : MonoBehaviour
     private void Update()
     {
         _playerController.OnUpdate();
+        _enemyController.OnUpdate();
     }
 
     private void FixedUpdate()
@@ -91,11 +111,21 @@ public class GameDirector : MonoBehaviour
     }
 
     /// <summary>
-    /// ボスが倒された場合に呼ばれ、終了処理を行う
+    /// ボスが倒されるか残機がゼロ未満になったら呼ばれ、ゲームオーバー画面に遷移する
     /// </summary>
-    public void KilledBoss()
+    public void OverGame()
     {
         SceneManager.LoadScene("GameOver");
+    }
+
+    /// <summary>
+	/// アクティブなすべての弾を消す
+	/// </summary>
+	public void ClearAllBullet()
+    {
+        _currentData.HomingDirector.CleatBullets();
+        _currentData.DiffusionDirector.CleatBullets();
+        _currentData.TargetDirector.CleatBullets();
     }
     #endregion
 }

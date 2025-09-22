@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68fb17c3609ea5b4c90fc91e7dcd3448, type: 3}
   m_Name: HomingBullet
   m_EditorClassIdentifier: 
-  _bullet: {fileID: 0}
+  _bullet: {fileID: 5588461784803856094, guid: 19d59f94c9bfe03428d93a7bdd9921a0, type: 3}
   _myType: 1
-  _instanceCount: 3
+  _instanceCount: 1
   _bulletSpeed: 0.01
   _bulletColliderRadius: 0.5
   _bulletObjectType: 3
+  _bulletScore: 100

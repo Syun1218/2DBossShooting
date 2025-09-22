@@ -11,7 +11,9 @@ public class SelfCircleCollider : MonoBehaviour,CollisionInterface
 	private Vector2 _centerPoint;
 	private float _radius;
 	private ObjectType _myObjectType;
+    private BulletData.BulletType _bulletType;
     private CollisionInterface _myCollisionInterface;
+    private int _bulletScore;
 
     //弾の衝突後処理用変数
     private bool _isCollision = false;
@@ -49,6 +51,16 @@ public class SelfCircleCollider : MonoBehaviour,CollisionInterface
         get { return _isCollision; }
         set { _isCollision = value; }
     }
+
+    public int BulletScore
+    {
+        set { _bulletScore = value; }
+    }
+
+    public BulletData.BulletType BulletType
+    {
+        set { _bulletType = value; }
+    }
 	#endregion
 
 	#region メソッド
@@ -79,24 +91,20 @@ public class SelfCircleCollider : MonoBehaviour,CollisionInterface
     public void OnCollision(SelfCircleCollider.ObjectType otherType)
     {
         _isCollision = true;
+
+        //これが敵の弾オブジェクトであれば、スコアを加算
+        if(_myObjectType == ObjectType.EnemyBullet)
+        {
+            GameDirector.Instance.ScoreDirector.AddScore(_bulletScore);
+
+            //ホーミング弾であればデータ更新を行う
+            if (_bulletType == BulletData.BulletType.Homing)
+            {
+                GameDirector.Instance.CurrentData.IsExistenceHomingBullet = false;
+            }
+        }
     }
-
-
     #endregion
 
-    private void OnDrawGizmos()
-    {
-        // ギズモの色をオブジェクトタイプごとに変える
-        switch (_myObjectType)
-        {
-            case ObjectType.Player: Gizmos.color = Color.green; break;
-            case ObjectType.PlayerBullet: Gizmos.color = Color.cyan; break;
-            case ObjectType.Enemy: Gizmos.color = Color.red; break;
-            case ObjectType.EnemyBullet: Gizmos.color = Color.yellow; break;
-        }
 
-        //円を描画
-        UnityEditor.Handles.color = Gizmos.color;
-        UnityEditor.Handles.DrawWireDisc(_centerPoint, Vector3.forward, _radius);
-    }
 }

@@ -22,13 +22,13 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 0b3783803ecc3ee47b9a28202b14105e
-    m_Address: PlayerBullet
+  - m_GUID: ebf82de259e8f40429e4a920476ed0e4
+    m_Address: BossData
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ebf82de259e8f40429e4a920476ed0e4
-    m_Address: BossData
+  - m_GUID: 8d74197afab8b27408c15fdf67d6fc08
+    m_Address: ScoreCanvas
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

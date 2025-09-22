@@ -17,8 +17,20 @@ public class BulletDirector
 	private BulletData.BulletType _bulletType;
 	private int _nowBullet = 0;
 
+	//ホーミング弾移動処理変数
+	private float _targetAngle;
+	private float _clampAngle;
+	private float _rotateStep;
+	private float _nowHomingTime = 0;
+	private bool _isHoming = true;
+	private float _totalAngle = 0;
+
 	//定数
 	private const float MAX_BULLET_POSITION_X = 9f;
+	private const float ENEMY_MAX_BULLET_POSITION_X = -10f;
+	private const float MAX_ANGLE = 30;
+	private const float ROTATE_SPEED = 25;
+	private const float TARGET_HOMING_TIME = 30;
 	#endregion
 
 	#region プロパティ
@@ -56,6 +68,9 @@ public class BulletDirector
 		}
     }
 
+	/// <summary>
+	/// 弾の衝突状況を管理する
+	/// </summary>
 	public void OnUpdate()
     {
 		//弾が存在しない場合処理を行わない
@@ -139,21 +154,103 @@ public class BulletDirector
 	/// </summary>
 	private void HomingBulletMove()
     {
+		for (int i = 0; i < _maxCount; i++)
+		{
+			if (_bulletArray[i] is not null)
+			{
+				//弾オブジェクトの左方向に向かって移動させる
+				_bulletNowPosition = _bulletArray[i].transform.position;
+				_bulletNowPosition -= (Vector2)_bulletArray[i].transform.right * _bulletSpeed;
+				_bulletArray[i].transform.position = _bulletNowPosition;
 
-    }
+                if (_isHoming)
+                {
+					//プレイヤーとの位置関係によって±30度までの緩やかな回転をさせる
+					_targetAngle = Vector2.SignedAngle(-_bulletArray[i].transform.right, (GameDirector.Instance.CurrentData.PlayerPosition - (Vector2)_bulletArray[i].transform.position).normalized);
+					_clampAngle = Mathf.Clamp(_targetAngle, -MAX_ANGLE, MAX_ANGLE);
+					_rotateStep = ROTATE_SPEED * Time.deltaTime;
+					_bulletArray[i].transform.Rotate(0, 0, Mathf.Clamp(_clampAngle, -_rotateStep, _rotateStep));
+					_totalAngle += Mathf.Clamp(_clampAngle, -_rotateStep, _rotateStep);
+
+					//一定時間後、誘導をやめる
+					_nowHomingTime += Time.deltaTime;
+					if(_nowHomingTime >= TARGET_HOMING_TIME)
+                    {
+						_isHoming = false;
+                    }
+				}
+
+				//一定のX座標を超えたら、返却処理を行う
+				if (ENEMY_MAX_BULLET_POSITION_X >= _bulletArray[i].transform.position.x)
+				{
+					_bulletPool.EnqueueObject(_bulletArray[i]);
+					_bulletArray[i] = null;
+					_bulletColliderArray[i] = null;
+					_nowBullet--;
+					_nowHomingTime = 0;
+					_isHoming = true;
+					_targetAngle = 0;
+				}
+			}
+		}
+	}
 
 	/// <summary>
 	/// 拡散タイプの弾の移動処理
 	/// </summary>
 	private void DiffusionBulletMove()
     {
+		for (int i = 0; i < _maxCount; i++)
+		{
+			if (_bulletArray[i] is not null)
+			{
+				//弾オブジェクトの左方向に向かって直進させる
+				_bulletNowPosition = _bulletArray[i].transform.position;
+				_bulletNowPosition += (Vector2)_bulletArray[i].transform.right * _bulletSpeed;
+				_bulletArray[i].transform.position = _bulletNowPosition;
 
-    }
+				//一定のX座標を超えたら、返却処理を行う
+				if (ENEMY_MAX_BULLET_POSITION_X >= _bulletArray[i].transform.position.x)
+				{
+					_bulletPool.EnqueueObject(_bulletArray[i]);
+					_bulletArray[i] = null;
+					_bulletColliderArray[i] = null;
+					_nowBullet--;
+				}
+			}
+		}
+	}
 
 	/// <summary>
 	/// 目標直線タイプの弾の移動処理
 	/// </summary>
 	private void TargetBulletMove()
+    {
+		for (int i = 0; i < _maxCount; i++)
+		{
+			if (_bulletArray[i] is not null)
+			{
+				//弾オブジェクトの左方向に向かって直進させる
+				_bulletNowPosition = _bulletArray[i].transform.position;
+				_bulletNowPosition += (Vector2)_bulletArray[i].transform.right * _bulletSpeed;
+				_bulletArray[i].transform.position = _bulletNowPosition;
+
+                //一定のX座標を超えたら、返却処理を行う
+                if (ENEMY_MAX_BULLET_POSITION_X >= _bulletArray[i].transform.position.x)
+                {
+                    _bulletPool.EnqueueObject(_bulletArray[i]);
+                    _bulletArray[i] = null;
+                    _bulletColliderArray[i] = null;
+                    _nowBullet--;
+                }
+            }
+		}
+	}
+
+	/// <summary>
+	/// アクティブな弾をすべて消す
+	/// </summary>
+	public void CleatBullets()
     {
 
     }

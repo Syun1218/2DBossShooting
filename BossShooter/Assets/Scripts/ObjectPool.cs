@@ -22,11 +22,11 @@ public class ObjectPool
 	#endregion
 
 	#region メソッド
-	public ObjectPool(GameObject poolObject,int count,float radius,SelfCircleCollider.ObjectType type)
+	public ObjectPool(GameObject poolObject, int count, float radius, SelfCircleCollider.ObjectType type,BulletData.BulletType bType ,int score = 0)
     {
 		//ヒエラルキーの整理用に弾を子としてもつ空オブジェクトを生成
-		_bulletParent = new GameObject("PlayerBulletParent");
-
+		_bulletParent = new GameObject("BulletParent");
+		
 		//渡されたオブジェクトをプレイヤーの子として生成し、キューに記録
 		for(int i = 0;i < count; i++)
         {
@@ -34,6 +34,8 @@ public class ObjectPool
 			_poolObjectCollider = _poolObject.GetComponent<SelfCircleCollider>();
 			_poolObjectCollider.Radius = radius;
 			_poolObjectCollider.MyObjectType = type;
+			_poolObjectCollider.BulletScore = score;
+			_poolObjectCollider.BulletType = bType;
 			_pool.Enqueue(_poolObject);
         }
     }

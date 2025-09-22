@@ -20,4 +20,4 @@ MonoBehaviour:
   _normalSpeed: 0.1
   _lowSpeed: 0.04
   _shotCoolTime: 0.5
-  _bulletAddress: PlayerBullet
+  _bulletData: {fileID: 11400000, guid: 0b3783803ecc3ee47b9a28202b14105e, type: 2}

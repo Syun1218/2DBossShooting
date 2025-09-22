@@ -21,7 +21,7 @@ public class PlayerData : ScriptableObject
 
     [SerializeField] [Header("プレイヤーの弾発射間隔")] private float _shotCoolTime;
 
-    [SerializeField] [Header("プレイヤーの弾のアドレス")] private string _bulletAddress;
+    [SerializeField] [Header("プレイヤーの弾のアドレス")] private BulletData _bulletData;
 	#endregion
 
 	#region プロパティ
@@ -90,11 +90,11 @@ public class PlayerData : ScriptableObject
     }
 
     /// <summary>
-    /// 使用する弾のアドレス
+    /// 使用する弾のデータ
     /// </summary>
-    public string BulletAddress
+    public BulletData BulletData
     {
-        get { return _bulletAddress; }
+        get { return _bulletData; }
     }
 	#endregion
 }

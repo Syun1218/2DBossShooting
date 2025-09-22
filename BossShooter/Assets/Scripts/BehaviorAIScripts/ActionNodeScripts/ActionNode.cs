@@ -54,6 +54,8 @@ public class ActionNode : NodeBace
     {
         _myControll.Owner = _aiOwner;
         _myControll.EnemyData = _enemyData;
+        _myControll.Pools = _pools;
+        _myControll.Index = _index;
 
         _myControll.Initialized();
     }
