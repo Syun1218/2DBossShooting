@@ -24,6 +24,9 @@ public class BulletDirector
 	private float _nowHomingTime = 0;
 	private bool _isHoming = true;
 	private float _totalAngle = 0;
+	private float _frameRotate;
+	private float _rotateDiff;
+	private float _desideTortal;
 
 	//定数
 	private const float MAX_BULLET_POSITION_X = 9f;
@@ -167,22 +170,37 @@ public class BulletDirector
                 {
 					//プレイヤーとの位置関係によって±30度までの緩やかな回転をさせる
 					_targetAngle = Vector2.SignedAngle(-_bulletArray[i].transform.right, (GameDirector.Instance.CurrentData.PlayerPosition - (Vector2)_bulletArray[i].transform.position).normalized);
-					_clampAngle = Mathf.Clamp(_targetAngle, -MAX_ANGLE, MAX_ANGLE);
 					_rotateStep = ROTATE_SPEED * Time.deltaTime;
-					_bulletArray[i].transform.Rotate(0, 0, Mathf.Clamp(_clampAngle, -_rotateStep, _rotateStep));
-					_totalAngle += Mathf.Clamp(_clampAngle, -_rotateStep, _rotateStep);
+					_frameRotate = Mathf.Clamp(_targetAngle, -_rotateStep, _rotateStep);
+					_totalAngle = _desideTortal + _frameRotate;
 
-					//一定時間後、誘導をやめる
-					_nowHomingTime += Time.deltaTime;
+					//制限超過分を補正する
+					if(_totalAngle > MAX_ANGLE)
+					{
+						_frameRotate = MAX_ANGLE - _desideTortal;
+					}
+					else if(-MAX_ANGLE > _totalAngle)
+					{
+                        _frameRotate = -MAX_ANGLE - _desideTortal;
+                    }
+
+                    //回転を適用する
+                    _bulletArray[i].transform.Rotate(0, 0, _frameRotate);
+					_desideTortal += _frameRotate;
+
+                    //一定時間後、誘導をやめる
+                    _nowHomingTime += Time.deltaTime;
 					if(_nowHomingTime >= TARGET_HOMING_TIME)
                     {
+						Debug.Log("a");
 						_isHoming = false;
                     }
-				}
+                }
 
 				//一定のX座標を超えたら、返却処理を行う
 				if (ENEMY_MAX_BULLET_POSITION_X >= _bulletArray[i].transform.position.x)
 				{
+					_bulletArray[i].transform.Rotate(Vector3.zero);
 					_bulletPool.EnqueueObject(_bulletArray[i]);
 					_bulletArray[i] = null;
 					_bulletColliderArray[i] = null;
@@ -190,6 +208,8 @@ public class BulletDirector
 					_nowHomingTime = 0;
 					_isHoming = true;
 					_targetAngle = 0;
+					_desideTortal = 0;
+					GameDirector.Instance.CurrentData.IsExistenceHomingBullet = false;
 				}
 			}
 		}
