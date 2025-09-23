@@ -1,8 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 
 /// <summary>
@@ -11,7 +9,6 @@ using UnityEngine.UI;
 public class BombUIDirector
 {
     #region 変数
-    private AsyncOperationHandle<GameObject> _loadCanvas;
     private Canvas _bombCanvas;
     private Image[] _bombImages;
     private int _bombCount;
@@ -25,11 +22,10 @@ public class BombUIDirector
     #endregion
 
     #region メソッド
-    public BombUIDirector(int bomb)
+    public BombUIDirector(int bomb,Canvas canvas)
     {
         //カンバスをロードする
-        _loadCanvas = Addressables.LoadAssetAsync<GameObject>("BombCanvas");
-        _bombCanvas = _loadCanvas.WaitForCompletion().GetComponent<Canvas>();
+        _bombCanvas = canvas;
         _bombCount = bomb - ARRAY_OFFSET;
 
         //ボムイメージを取得
@@ -48,14 +44,6 @@ public class BombUIDirector
     {
         _bombImages[_bombCount].enabled = false;
         _bombCount--;
-    }
-
-    /// <summary>
-    /// データをリリースする
-    /// </summary>
-    public void ReleaseLoadData()
-    {
-        Addressables.Release(_loadCanvas);
     }
     #endregion
 }

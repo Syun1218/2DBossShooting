@@ -1,8 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 using TMPro;
 
@@ -12,7 +10,6 @@ using TMPro;
 public class ScoreDirector
 {
 	#region 変数
-	private AsyncOperationHandle<GameObject> _loadCanvas;
 	private int _score = 0;
 	private Canvas _scoreCanvas;
 	private TMP_Text _scoreText;
@@ -26,11 +23,10 @@ public class ScoreDirector
 	#endregion
 
 	#region メソッド
-	public ScoreDirector()
+	public ScoreDirector(Canvas canvas)
     {
 		//カンバスをロードする
-		_loadCanvas = Addressables.LoadAssetAsync<GameObject>("ScoreCanvas");
-		_scoreCanvas = _loadCanvas.WaitForCompletion().GetComponent<Canvas>();
+		_scoreCanvas = canvas;
 
 		//カンバスを生成し、子オブジェクトをテキストとして記録
 		_scoreCanvas = GameObject.Instantiate(_scoreCanvas);
@@ -42,14 +38,6 @@ public class ScoreDirector
     {
 		_score += add;
 		_scoreText.SetText(_score.ToString());
-    }
-
-    /// <summary>
-    /// データをリリースする
-    /// </summary>
-    public void ReleaseLoadData()
-    {
-		Addressables.Release(_loadCanvas);
     }
     #endregion
 }

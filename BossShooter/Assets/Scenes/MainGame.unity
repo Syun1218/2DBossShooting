@@ -312,6 +312,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a909a07492926974e8cea1b2017ae301, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _scoreCanvas: {fileID: 3321617151050670128, guid: 8d74197afab8b27408c15fdf67d6fc08, type: 3}
+  _enemyHPUICanvas: {fileID: 5039542995578028107, guid: f1b13de94abd016448c46bb191226a27, type: 3}
+  _lifeHPUICanvas: {fileID: 8171021093758034115, guid: 59203e5909307374499bc6f9ac6d8870, type: 3}
+  _bombUICanvas: {fileID: 8242675982433203690, guid: ba714d8d48c008943ba21116809b4e44, type: 3}
+  _playerData: {fileID: 11400000, guid: 9797128c7de92c749a2bfe3eb0c1022a, type: 2}
+  _enemyData: {fileID: 11400000, guid: ebf82de259e8f40429e4a920476ed0e4, type: 2}
 --- !u!4 &1864907490
 Transform:
   m_ObjectHideFlags: 0

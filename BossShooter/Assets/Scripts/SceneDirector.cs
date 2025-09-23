@@ -32,11 +32,15 @@ public class SceneDirector : MonoBehaviour
         if(SceneManager.GetActiveScene().name == "Title")
         {
             //現在がタイトルシーンならメインシーンへ移行
+            SEDirector.Instance.PlayButtonSE();
+            BGMDirector.Instance.PlayMainBGM();
             SceneManager.LoadScene("MainGame");
         }
         else if(SceneManager.GetActiveScene().name == "GameOver")
         {
             //現在がオーバーシーンならタイトルシーンへ移行
+            SEDirector.Instance.PlayButtonSE();
+            BGMDirector.Instance.PlayTitleBGM();
             SceneManager.LoadScene("Title");
         }
     }

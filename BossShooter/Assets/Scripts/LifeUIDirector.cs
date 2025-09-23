@@ -1,8 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 
 /// <summary>
@@ -11,7 +9,6 @@ using UnityEngine.UI;
 public class LifeUIDirector
 {
     #region 変数
-    private AsyncOperationHandle<GameObject> _loadCanvas;
     private Canvas _lifeCanvas;
     private Image[] _lifeImages;
     private int _lifeCount;
@@ -25,11 +22,10 @@ public class LifeUIDirector
     #endregion
 
     #region メソッド
-    public LifeUIDirector(int life)
+    public LifeUIDirector(int life,Canvas canvas)
     {
         //カンバスをロードする
-        _loadCanvas = Addressables.LoadAssetAsync<GameObject>("LifeCanvas");
-        _lifeCanvas = _loadCanvas.WaitForCompletion().GetComponent<Canvas>();
+        _lifeCanvas = canvas;
         _lifeCount = life - ARRAY_OFFSET;
 
         //残機イメージを取得
@@ -48,14 +44,6 @@ public class LifeUIDirector
     {
         _lifeImages[_lifeCount].enabled = false;
         _lifeCount--;
-    }
-
-    /// <summary>
-    /// データをリリースする
-    /// </summary>
-    public void ReleaseLoadData()
-    {
-        Addressables.Release(_loadCanvas);
     }
     #endregion
 }

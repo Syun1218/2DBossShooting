@@ -1,14 +1,11 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 
 public class EnemyHPUI
 {
     #region 変数
-    private AsyncOperationHandle<GameObject> _loadCanvas;
 	private Canvas _uiCanvas;
     private Slider _hpSlider;
 	#endregion
@@ -18,11 +15,10 @@ public class EnemyHPUI
 	#endregion
 
 	#region メソッド
-	public EnemyHPUI(float maxHP)
+	public EnemyHPUI(float maxHP,Canvas canvas)
 	{
         //カンバスをロードする
-        _loadCanvas = Addressables.LoadAssetAsync<GameObject>("HPCanvas");
-		_uiCanvas = _loadCanvas.WaitForCompletion().GetComponent<Canvas>();
+		_uiCanvas = canvas;
 
 		//スライダーを取得する
 		_uiCanvas = GameObject.Instantiate(_uiCanvas);
@@ -38,13 +34,5 @@ public class EnemyHPUI
 	{
 		_hpSlider.value = hp;
 	}
-
-    /// <summary>
-    /// データをリリースする
-    /// </summary>
-    public void ReleaseLoadData()
-    {
-		Addressables.Release(_loadCanvas);
-    }
     #endregion
 }

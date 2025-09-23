@@ -72,6 +72,12 @@ public class SubEnemyController:CollisionInterface
 
 	public void OnCollision(SelfCircleCollider.ObjectType otherType)
 	{
+		//すでに破壊済みの場合処理をしない
+		if (!_isLive)
+		{
+			return;
+		}
+
 		//衝突相手がプレイヤーの弾オブジェクトの場合、ダメージを受ける
 		if(otherType == SelfCircleCollider.ObjectType.PlayerBullet)
         {
@@ -80,6 +86,7 @@ public class SubEnemyController:CollisionInterface
 			//HPが0になった場合、破壊状態にする
 			if(0 >= _myHP)
 			{
+				SEDirector.Instance.PlayDestroySE();
 				_isLive = false;
 				_gameDirector.CurrentData.IsDieSubEnemies[_myIndex] = true;
 				_subEnemy.GetComponent<SpriteRenderer>().material.color = Color.black;

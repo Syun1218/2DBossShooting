@@ -153,7 +153,8 @@ public class PlayerController:CollisionInterface
         //ショット操作がされているかつクールタイムが明けている場合、弾を発射する
         if (_canShot && _inputShot)
         {
-            for(int i = 0;i < _gameDirector.GetPlayerBulletCount(); i++)
+            SEDirector.Instance.PlayShotSE();
+            for (int i = 0;i < _gameDirector.GetPlayerBulletCount(); i++)
             {
                 //弾の生成位置を計算
                 _bulletInstanceXPosition = _player.transform.position.x;
@@ -250,6 +251,7 @@ public class PlayerController:CollisionInterface
             //ボム回数が残っているのであれば使用する
             if(_myBomb > 0)
             {
+                SEDirector.Instance.PlayBombSE();
                 _myBomb--;
                 _gameDirector.RemoveBomb();
                 _gameDirector.ClearAllBullet();
