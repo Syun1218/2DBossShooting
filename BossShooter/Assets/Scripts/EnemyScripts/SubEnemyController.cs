@@ -8,7 +8,8 @@ using System.Collections.Generic;
 public class SubEnemyController:CollisionInterface
 {
 	#region 変数
-	private GameObject _subEnemy;
+	private GameDirector _gameDirector;
+    private GameObject _subEnemy;
 	private SelfCircleCollider _myCollider;
 	private float _myHP;
 	private bool _isLive = true;
@@ -26,8 +27,9 @@ public class SubEnemyController:CollisionInterface
 	#endregion
 
 	#region メソッド
-	public SubEnemyController(GameObject subEnemy,SelfCircleCollider collider,NodeTreeDesigner designer,EnemyData data,EnemyBulletPools pools,int index)
+	public SubEnemyController(GameDirector director,GameObject subEnemy,SelfCircleCollider collider,NodeTreeDesigner designer,EnemyData data,EnemyBulletPools pools,int index)
     {
+		_gameDirector = director;
 		_subEnemy = subEnemy;
 		_myCollider = collider;
 		_myIndex = index;
@@ -38,7 +40,7 @@ public class SubEnemyController:CollisionInterface
 		_myCollider.MyCollisionInterface = this;
 
 		//AIを構築する
-		_root = new RootNode(designer, subEnemy, data, pools,_myIndex);
+		_root = new RootNode(_gameDirector,designer, subEnemy, data, pools,_myIndex);
 		_isStart = true;
 	}
 
@@ -79,7 +81,8 @@ public class SubEnemyController:CollisionInterface
 			if(0 >= _myHP)
 			{
 				_isLive = false;
-				GameDirector.Instance.CurrentData.IsDieSubEnemies[_myIndex] = true;
+				_gameDirector.CurrentData.IsDieSubEnemies[_myIndex] = true;
+				_subEnemy.GetComponent<SpriteRenderer>().material.color = Color.black;
 			}
         }
 	}

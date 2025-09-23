@@ -49,5 +49,13 @@ public class BombUIDirector
         _bombImages[_bombCount].enabled = false;
         _bombCount--;
     }
+
+    /// <summary>
+    /// データをリリースする
+    /// </summary>
+    public void ReleaseLoadData()
+    {
+        Addressables.Release(_loadCanvas);
+    }
     #endregion
 }

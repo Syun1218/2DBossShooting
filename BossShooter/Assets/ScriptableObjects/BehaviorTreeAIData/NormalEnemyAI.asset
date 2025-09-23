@@ -131,5 +131,11 @@ MonoBehaviour:
     _myType: 0
     _nodeID: 19
     _parentID: 18
+    _actionType: 0
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 0
+    _nodeID: 20
+    _parentID: 18
     _actionType: 1
     _conditionType: 0

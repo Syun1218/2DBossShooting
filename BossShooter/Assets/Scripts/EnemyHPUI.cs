@@ -38,5 +38,13 @@ public class EnemyHPUI
 	{
 		_hpSlider.value = hp;
 	}
-	#endregion
+
+    /// <summary>
+    /// データをリリースする
+    /// </summary>
+    public void ReleaseLoadData()
+    {
+		Addressables.Release(_loadCanvas);
+    }
+    #endregion
 }

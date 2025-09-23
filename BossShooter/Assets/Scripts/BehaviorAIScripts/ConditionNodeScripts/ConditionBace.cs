@@ -7,8 +7,19 @@ using System.Collections.Generic;
 /// </summary>
 public class ConditionBace
 {
-	#region メソッド  
-	public virtual NodeBace.NodeState IsJudge()
+    #region 変数
+    protected GameDirector _gameDirector;
+    #endregion
+
+    #region プロパティ
+    public GameDirector GameDirector
+    {
+        set { _gameDirector = value; }
+    }
+    #endregion
+
+    #region メソッド  
+    public virtual NodeBace.NodeState IsJudge()
     {
 		return NodeBace.NodeState.Running;
     }

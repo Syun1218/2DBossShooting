@@ -7,7 +7,8 @@ using System.Collections.Generic;
 /// </summary>
 public class SelfCircleCollider : MonoBehaviour,CollisionInterface
 {
-	#region 変数
+    #region 変数
+    private GameDirector _gameDirector;
 	private Vector2 _centerPoint;
 	private float _radius;
 	private ObjectType _myObjectType;
@@ -21,6 +22,11 @@ public class SelfCircleCollider : MonoBehaviour,CollisionInterface
 	#endregion
 
 	#region プロパティ
+    public GameDirector GameDirector
+    {
+        set { _gameDirector = value; }
+    }
+
 	/// <summary>
 	/// サークルコライダーの半径
 	/// </summary>
@@ -84,6 +90,8 @@ public class SelfCircleCollider : MonoBehaviour,CollisionInterface
     private void Awake()
     {
         _myCollisionInterface = this;
+
+        _gameDirector = GameObject.FindGameObjectWithTag("Director").GetComponent<GameDirector>();
     }
 
     public void FixedUpdate()
@@ -104,14 +112,14 @@ public class SelfCircleCollider : MonoBehaviour,CollisionInterface
             //衝突相手がプレイヤーの弾であればスコアを加算
             if (_otherObjectType == ObjectType.PlayerBullet)
             {
-                GameDirector.Instance.ScoreDirector.AddScore(_bulletScore);
+                _gameDirector.ScoreDirector.AddScore(_bulletScore);
             }
             
             
             //ホーミング弾であればデータ更新を行う
             if (_bulletType == BulletData.BulletType.Homing)
             {
-                GameDirector.Instance.CurrentData.IsExistenceHomingBullet = false;
+                _gameDirector.CurrentData.IsExistenceHomingBullet = false;
             }
         }
     }

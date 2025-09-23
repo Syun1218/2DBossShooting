@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public class ObjectPool
 {
 	#region 変数
+	private CheckSelfCollider _colliderChecker;
 	private GameObject _bulletParent;
 	private Queue<GameObject> _pool = new Queue<GameObject>();
 	private GameObject _poolObject;
@@ -22,8 +23,10 @@ public class ObjectPool
 	#endregion
 
 	#region メソッド
-	public ObjectPool(GameObject poolObject, int count, float radius, SelfCircleCollider.ObjectType type,BulletData.BulletType bType ,int score = 0)
+	public ObjectPool(CheckSelfCollider checker,GameObject poolObject, int count, float radius, SelfCircleCollider.ObjectType type,BulletData.BulletType bType ,int score = 0)
     {
+		_colliderChecker = checker;
+
 		//ヒエラルキーの整理用に弾を子としてもつ空オブジェクトを生成
 		_bulletParent = new GameObject("BulletParent");
 		
@@ -47,7 +50,7 @@ public class ObjectPool
 	public void EnqueueObject(GameObject obj)
     {
 		//オブジェクトを衝突判定の対象から外す
-		CheckSelfCollider.Instance.RemoveColliderObject(obj);
+		_colliderChecker.RemoveColliderObject(obj);
 
 		//プールにしまう
         obj.transform.position = _poolInstancePosition;
@@ -71,7 +74,7 @@ public class ObjectPool
         _poolObject.transform.position = pos;
 
 		//取り出したオブジェクトを衝突判定の対象にする
-		CheckSelfCollider.Instance.SetColliderObject(_poolObject);
+		_colliderChecker.SetColliderObject(_poolObject);
 
 		return _poolObject;
     }

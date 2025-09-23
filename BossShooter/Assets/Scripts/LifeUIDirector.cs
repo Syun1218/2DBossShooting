@@ -49,5 +49,13 @@ public class LifeUIDirector
         _lifeImages[_lifeCount].enabled = false;
         _lifeCount--;
     }
+
+    /// <summary>
+    /// データをリリースする
+    /// </summary>
+    public void ReleaseLoadData()
+    {
+        Addressables.Release(_loadCanvas);
+    }
     #endregion
 }

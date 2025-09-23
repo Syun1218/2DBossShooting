@@ -5,9 +5,10 @@ using System.Collections.Generic;
 /// <summary>
 /// 自作の円形コライダー同士の衝突判定を行う
 /// </summary>
-public class CheckSelfCollider : MonoBehaviour
+public class CheckSelfCollider
 {
 	#region 変数
+    private GameDirector _gameDirector;
 	private static CheckSelfCollider _instance;
 	private List<SelfCircleCollider> _colliders = new List<SelfCircleCollider>();
 
@@ -16,25 +17,16 @@ public class CheckSelfCollider : MonoBehaviour
 	#endregion
 
 	#region プロパティ
-	public static CheckSelfCollider Instance
+    public GameDirector GameDirector
     {
-        get { return _instance; }
+        set { _gameDirector = value; }
     }
     #endregion
 
     #region メソッド
-    private void Awake()
+    public CheckSelfCollider(GameDirector gameDirector)
     {
-        //シングルトンの設定を行う
-        if(_instance is null)
-        {
-            _instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        _gameDirector = gameDirector;
     }
 
     /// <summary>
@@ -54,9 +46,9 @@ public class CheckSelfCollider : MonoBehaviour
         _colliders.Remove(obj.GetComponent<SelfCircleCollider>());
     }
 
-    private void Update()
+    public void OnUpdate()
     {
-        if (GameDirector.Instance.IsPouse)
+        if (_gameDirector.IsPouse)
         {
             return;
         }
@@ -202,6 +194,14 @@ public class CheckSelfCollider : MonoBehaviour
         //それぞれの半径を足したものと中心点からの距離を判定し半径の合計の方が大きい場合衝突しているとみなす
         _addRadius = my.Radius + other.Radius;
         return (_addRadius * _addRadius >= (my.CenterPoint - other.CenterPoint).sqrMagnitude);
+    }
+
+    /// <summary>
+    /// アクティブなコライダーデータをリセット
+    /// </summary>
+    public void ClearCollisionData()
+    {
+        _colliders.Clear();
     }
     #endregion
 }

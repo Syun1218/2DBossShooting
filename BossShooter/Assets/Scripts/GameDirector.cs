@@ -12,9 +12,11 @@ public class GameDirector : MonoBehaviour
 {
     #region 変数
     //進行変数
-    private static GameDirector _instance;
+    private GameDirector _instance;
     private GameCurrentData _currentData;
+    private CheckSelfCollider _checkSelfCollider;
     private bool _isPouse = false;
+    private bool _isLoad = false;
 
     //UI変数
     private ScoreDirector _scoreDirector;
@@ -42,11 +44,6 @@ public class GameDirector : MonoBehaviour
     #endregion
 
     #region プロパティ
-    public static GameDirector Instance
-    {
-        get { return _instance; }
-    }
-
     public GameCurrentData CurrentData
     {
         get { return _currentData; }
@@ -68,27 +65,58 @@ public class GameDirector : MonoBehaviour
     #region メソッド
     private void Awake()
     {
-        //シングルトンを設定
-        if(_instance is null)
-        {
-            _instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-
         //データ保存用クラスを生成する
         _currentData = new GameCurrentData();
+        _checkSelfCollider = new CheckSelfCollider(this);
+    }
 
+    private IEnumerator Start()
+    {
+        //ロードを行う
+        _isLoad = false;
+        yield return StartCoroutine(LoadAnyObject());
+
+        //ロード後の処理を行う
+        InstanceLoadObject();
+    }
+
+    /// <summary>
+    /// ロードを行う
+    /// </summary>
+    private IEnumerator LoadAnyObject()
+    {
         //スクリプタブルオブジェクトをロードする
         _loadPlayerData = Addressables.LoadAssetAsync<PlayerData>("PlayerData");
-        _playerData = _loadPlayerData.WaitForCompletion();
-        _playerBulletData = _playerData.BulletData;
         _loadEnemyData = Addressables.LoadAssetAsync<EnemyData>("BossData");
-        _enemyData = _loadEnemyData.WaitForCompletion();
 
+        while(!_loadEnemyData.IsDone || !_loadPlayerData.IsDone)
+        {
+            yield return null;
+        }
+
+        //ロード失敗した場合の処理を行う
+        if(_loadPlayerData.Status != AsyncOperationStatus.Succeeded)
+        {
+            yield break;
+        }
+
+        if(_loadEnemyData.Status != AsyncOperationStatus.Succeeded)
+        {
+            yield break;
+        }
+
+        //ロードしたデータを記録
+        _playerData = _loadPlayerData.Result;
+        _enemyData = _loadEnemyData.Result;
+
+        _isLoad = true;
+    }
+
+    /// <summary>
+    /// ロード終了後の処理を行う
+    /// </summary>
+    private void InstanceLoadObject()
+    {
         //UIクラスを生成する
         _scoreDirector = new ScoreDirector();
         _enemyHPUI = new EnemyHPUI(_enemyData.MaxHP);
@@ -96,31 +124,39 @@ public class GameDirector : MonoBehaviour
         _bombUIDirector = new BombUIDirector(_playerData.MaxBomb);
 
         //各オブジェクトを生成する
+        _playerBulletData = _playerData.BulletData;
         _player = Instantiate(_playerData.Player, _playerData.PlayerInstancePosition, Quaternion.identity);
         _enemyParent = new GameObject("EnemyParent");
         _enemy = Instantiate(_enemyData.Enemy, _enemyData.EnemyInstancePosition, Quaternion.identity, _enemyParent.transform);
-        if(_enemyData.SubEnemies.Length != 0)
+        if (_enemyData.SubEnemies.Length != 0)
         {
             //エネミーの部位がある場合、すべて生成
             _subEnemies = new GameObject[_enemyData.SubEnemies.Length];
-            for(int i = 0;i < _enemyData.SubEnemies.Length; i++)
+            for (int i = 0; i < _enemyData.SubEnemies.Length; i++)
             {
                 _subEnemies[i] = Instantiate(_enemyData.SubEnemies[i], _enemyData.SubEnemyInstancePosition[i], Quaternion.identity, _enemyParent.transform);
             }
         }
 
         //各管理クラスのインスタンスを生成する
-        _playerController = new PlayerController(_playerData, _player,_playerBulletData);
-        _enemyController = new EnemyController(_enemy,_subEnemies,_enemyParent,_enemyData);
+        _playerController = new PlayerController(this,_checkSelfCollider,_playerData, _player, _playerBulletData);
+        _enemyController = new EnemyController(this,_checkSelfCollider,_enemy, _subEnemies, _enemyParent, _enemyData);
     }
 
     private void Update()
     {
+        //ロード前は動かさない
+        if (!_isLoad)
+        {
+            return;
+        }
+
         if (_isPouse)
         {
             return;
         }
 
+        _checkSelfCollider.OnUpdate();
         _playerController.OnUpdate();
         _enemyController.OnUpdate();
         _enemyHPUI.ChangeUI(_enemyController.HP);
@@ -128,6 +164,12 @@ public class GameDirector : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //ロード前は動かさない
+        if (!_isLoad)
+        {
+            return;
+        }
+
         _playerController.OnFixedUpdata();
         _enemyController.OnFixedUpdate();
     }
@@ -137,6 +179,20 @@ public class GameDirector : MonoBehaviour
     /// </summary>
     public void OverGame()
     {
+        //プレイヤーのインプットアクションを無効化する
+        _playerController.OnDisable();
+
+        //ロードしたデータをリリースする
+        Addressables.Release(_loadPlayerData);
+        Addressables.Release(_loadEnemyData);
+        _scoreDirector.ReleaseLoadData();
+        _bombUIDirector.ReleaseLoadData();
+        _lifeUIDirector.ReleaseLoadData();
+        _enemyHPUI.ReleaseLoadData();
+
+        //コライダー判定シングルトンのデータをリセットする
+        _checkSelfCollider.ClearCollisionData();
+
         SceneManager.LoadScene("GameOver");
     }
 

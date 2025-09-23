@@ -12,14 +12,10 @@ public class IsDieDownner : ConditionBace
     private const int DOWNER_INDEX = 1;
     #endregion
 
-    #region プロパティ
-
-    #endregion
-
     #region メソッド
     public override NodeBace.NodeState IsJudge()
     {
-        if (GameDirector.Instance.CurrentData.IsDieSubEnemies[DOWNER_INDEX])
+        if (_gameDirector.CurrentData.IsDieSubEnemies[DOWNER_INDEX])
         {
             return NodeBace.NodeState.Success;
         }

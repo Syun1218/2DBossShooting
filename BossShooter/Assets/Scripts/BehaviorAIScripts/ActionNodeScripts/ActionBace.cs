@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public class ActionBace
 {
 	#region 変数
+	protected GameDirector _gameDirector;
 	protected GameObject _owner;
 	protected EnemyData _enemyData;
 	protected EnemyBulletPools _pools;
@@ -19,6 +20,11 @@ public class ActionBace
 	#endregion
 
 	#region プロパティ
+	public GameDirector GameDirector
+	{
+		set { _gameDirector = value; }
+	}
+
 	public GameObject Owner
     {
         set { _owner = value; }
@@ -74,11 +80,11 @@ public class ActionBace
 		//インデックスが-1なら本体座標を、違うなら配列にインデックスを入れた際の値を発射座標とする
 		if (_index == DEFAULT_INDEX)
 		{
-			_shotInstancePosition = GameDirector.Instance.CurrentData.EnemyCorePosition;
+			_shotInstancePosition = _gameDirector.CurrentData.EnemyCorePosition;
 		}
 		else
 		{
-			_shotInstancePosition = GameDirector.Instance.CurrentData.SubEnemiesPosition[_index];
+			_shotInstancePosition = _gameDirector.CurrentData.SubEnemiesPosition[_index];
 		}
 	}
     #endregion

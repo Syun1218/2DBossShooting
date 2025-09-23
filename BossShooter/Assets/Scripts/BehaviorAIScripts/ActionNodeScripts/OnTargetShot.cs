@@ -34,11 +34,11 @@ public class OnTargetShot : ActionBace
         _canShot = true;
 
         //エネミーの状態によって連射回数を変化させる
-        if (GameDirector.Instance.IsEnemyHPMin())
+        if (_gameDirector.IsEnemyHPMin())
         {
             _nowShotCount = _enemyData.MinRapidFireCount;
         }
-        else if (GameDirector.Instance.IsEnemyHPMid())
+        else if (_gameDirector.IsEnemyHPMid())
         {
             _nowShotCount = _enemyData.MidRapidFireCount;
         }
@@ -74,14 +74,14 @@ public class OnTargetShot : ActionBace
             GetShotPosition();
 
             //弾オブジェクトの回転数を計算し、プールからの取り出し時に適用する
-            _rotate = (GameDirector.Instance.CurrentData.PlayerPosition - _shotInstancePosition).normalized;
+            _rotate = (_gameDirector.CurrentData.PlayerPosition - _shotInstancePosition).normalized;
             _rotateAngle = Mathf.Atan2(_rotate.y, _rotate.x) * Mathf.Rad2Deg;
         }
 
         //弾を発射する
         _bullet = _pools.TargetPool.DequeueObject(_shotInstancePosition);
         _bullet.transform.rotation = Quaternion.Euler(0, 0, _rotateAngle);
-        GameDirector.Instance.CurrentData.TargetDirector.SetActiveBullet(_bullet);
+        _gameDirector.CurrentData.TargetDirector.SetActiveBullet(_bullet);
 
         _nowCount++;
 

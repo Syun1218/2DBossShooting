@@ -7,8 +7,9 @@ using System.Collections.Generic;
 /// </summary>
 public class EnemyBulletPools
 {
-	#region 変数
-	private ObjectPool _homingPool;
+    #region 変数
+    private CheckSelfCollider _colliderChecker;
+    private ObjectPool _homingPool;
 	private ObjectPool _diffusionPool;
 	private ObjectPool _targetPool;
 	#endregion
@@ -40,11 +41,14 @@ public class EnemyBulletPools
 	#endregion
 
 	#region メソッド
-	public EnemyBulletPools(EnemyData data)
+	public EnemyBulletPools(EnemyData data,CheckSelfCollider checker)
     {
-		_homingPool = new ObjectPool(data.HomingBulletData.Bullet, data.HomingBulletData.InstanceCount, data.HomingBulletData.BulletColliderRadius, SelfCircleCollider.ObjectType.EnemyBullet,BulletData.BulletType.Homing,data.HomingBulletData.BulletScore);
-		_diffusionPool = new ObjectPool(data.DiffusionBulletData.Bullet, data.DiffusionBulletData.InstanceCount, data.DiffusionBulletData.BulletColliderRadius, SelfCircleCollider.ObjectType.EnemyBullet,BulletData.BulletType.Diffusion,data.DiffusionBulletData.BulletScore);
-		_targetPool = new ObjectPool(data.TargetBulletData.Bullet, data.TargetBulletData.InstanceCount, data.TargetBulletData.BulletColliderRadius, SelfCircleCollider.ObjectType.EnemyBullet,BulletData.BulletType.Target,data.TargetBulletData.BulletScore);
+		_colliderChecker = checker;
+
+		//弾の管理クラスを生成
+		_homingPool = new ObjectPool(_colliderChecker,data.HomingBulletData.Bullet, data.HomingBulletData.InstanceCount, data.HomingBulletData.BulletColliderRadius, SelfCircleCollider.ObjectType.EnemyBullet,BulletData.BulletType.Homing,data.HomingBulletData.BulletScore);
+		_diffusionPool = new ObjectPool(_colliderChecker,data.DiffusionBulletData.Bullet, data.DiffusionBulletData.InstanceCount, data.DiffusionBulletData.BulletColliderRadius, SelfCircleCollider.ObjectType.EnemyBullet,BulletData.BulletType.Diffusion,data.DiffusionBulletData.BulletScore);
+		_targetPool = new ObjectPool(_colliderChecker, data.TargetBulletData.Bullet, data.TargetBulletData.InstanceCount, data.TargetBulletData.BulletColliderRadius, SelfCircleCollider.ObjectType.EnemyBullet,BulletData.BulletType.Target,data.TargetBulletData.BulletScore);
     }
 	#endregion
 }

@@ -266,6 +266,15 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SceneChange"",
+                    ""type"": ""Button"",
+                    ""id"": ""eb9c84fa-44a6-486e-a5d1-ded6c7710b37"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -290,6 +299,28 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Pouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""51469fff-6b97-4cc8-8946-c9dad557393f"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SceneChange"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""76a3dc7e-3896-4954-9c8c-69c9f3c60cd0"",
+                    ""path"": ""<Gamepad>/*"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SceneChange"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -305,6 +336,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
         // Director
         m_Director = asset.FindActionMap("Director", throwIfNotFound: true);
         m_Director_Pouse = m_Director.FindAction("Pouse", throwIfNotFound: true);
+        m_Director_SceneChange = m_Director.FindAction("SceneChange", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -437,11 +469,13 @@ public partial class @Actions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Director;
     private List<IDirectorActions> m_DirectorActionsCallbackInterfaces = new List<IDirectorActions>();
     private readonly InputAction m_Director_Pouse;
+    private readonly InputAction m_Director_SceneChange;
     public struct DirectorActions
     {
         private @Actions m_Wrapper;
         public DirectorActions(@Actions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Pouse => m_Wrapper.m_Director_Pouse;
+        public InputAction @SceneChange => m_Wrapper.m_Director_SceneChange;
         public InputActionMap Get() { return m_Wrapper.m_Director; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -454,6 +488,9 @@ public partial class @Actions: IInputActionCollection2, IDisposable
             @Pouse.started += instance.OnPouse;
             @Pouse.performed += instance.OnPouse;
             @Pouse.canceled += instance.OnPouse;
+            @SceneChange.started += instance.OnSceneChange;
+            @SceneChange.performed += instance.OnSceneChange;
+            @SceneChange.canceled += instance.OnSceneChange;
         }
 
         private void UnregisterCallbacks(IDirectorActions instance)
@@ -461,6 +498,9 @@ public partial class @Actions: IInputActionCollection2, IDisposable
             @Pouse.started -= instance.OnPouse;
             @Pouse.performed -= instance.OnPouse;
             @Pouse.canceled -= instance.OnPouse;
+            @SceneChange.started -= instance.OnSceneChange;
+            @SceneChange.performed -= instance.OnSceneChange;
+            @SceneChange.canceled -= instance.OnSceneChange;
         }
 
         public void RemoveCallbacks(IDirectorActions instance)
@@ -488,5 +528,6 @@ public partial class @Actions: IInputActionCollection2, IDisposable
     public interface IDirectorActions
     {
         void OnPouse(InputAction.CallbackContext context);
+        void OnSceneChange(InputAction.CallbackContext context);
     }
 }

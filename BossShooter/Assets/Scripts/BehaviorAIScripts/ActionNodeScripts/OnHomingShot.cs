@@ -24,17 +24,17 @@ public class OnHomingShot : ActionBace
     public override NodeBace.NodeState OnAction()
     {
         //すでにホーミング弾が存在する場合、発射しない
-        if (GameDirector.Instance.CurrentData.IsExistenceHomingBullet)
+        if (_gameDirector.CurrentData.IsExistenceHomingBullet)
         {
             return NodeBace.NodeState.Success;
         }
 
         //まだ存在しない場合、弾を発射する
         GetShotPosition();
-        GameDirector.Instance.CurrentData.HomingDirector.SetActiveBullet(_pools.HomingPool.DequeueObject(_shotInstancePosition));
+        _gameDirector.CurrentData.HomingDirector.SetActiveBullet(_pools.HomingPool.DequeueObject(_shotInstancePosition));
 
         //データを更新する
-        GameDirector.Instance.CurrentData.IsExistenceHomingBullet = true;
+        _gameDirector.CurrentData.IsExistenceHomingBullet = true;
 
         return NodeBace.NodeState.Success;
     }

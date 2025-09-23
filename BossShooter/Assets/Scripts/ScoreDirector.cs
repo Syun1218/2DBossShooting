@@ -43,5 +43,13 @@ public class ScoreDirector
 		_score += add;
 		_scoreText.SetText(_score.ToString());
     }
-	#endregion
+
+    /// <summary>
+    /// データをリリースする
+    /// </summary>
+    public void ReleaseLoadData()
+    {
+		Addressables.Release(_loadCanvas);
+    }
+    #endregion
 }

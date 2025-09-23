@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public class NodeBace
 {
 	#region 変数
+	protected GameDirector _gameDirector;
 	protected EnemyData _enemyData;
 	protected int _index = -1;
 	protected List<NodeBace> _childNodes = new List<NodeBace>();
@@ -20,6 +21,11 @@ public class NodeBace
     #endregion
 
     #region プロパティ
+	public GameDirector GameDirector
+	{
+		set { _gameDirector = value; }
+	}
+
 	public List<NodeBace> ChildNodes
     {
         get { return _childNodes; }

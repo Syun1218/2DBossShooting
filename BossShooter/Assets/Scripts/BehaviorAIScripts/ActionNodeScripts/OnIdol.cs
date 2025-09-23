@@ -23,11 +23,11 @@ public class OnIdol : ActionBace
         _nowIdolTime = 0;
 
         //エネミーの状態によって待機時間を変化させる
-        if (GameDirector.Instance.IsEnemyHPMin())
+        if (_gameDirector.IsEnemyHPMin())
         {
             _targetIdolTime = _enemyData.MinIdolTime;
         }
-        else if (GameDirector.Instance.IsEnemyHPMid())
+        else if (_gameDirector.IsEnemyHPMid())
         {
             _targetIdolTime = _enemyData.MidIdolTime;
         }

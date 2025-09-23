@@ -13,7 +13,7 @@ public class RootNode : NodeBace
 	#endregion
 
 	#region メソッド  
-	public RootNode(NodeTreeDesigner designer,GameObject aiOwner,EnemyData data, EnemyBulletPools pools,int index = -1)
+	public RootNode(GameDirector director,NodeTreeDesigner designer,GameObject aiOwner,EnemyData data, EnemyBulletPools pools,int index = -1)
     {
 		//ツリー構造とAIを保持するオブジェクトを取得
 		_designer = designer;
@@ -30,6 +30,7 @@ public class RootNode : NodeBace
 			_allNodes[i].EnemyData = data;
 			_allNodes[i].Index = index;
 			_allNodes[i].Pools = pools;
+			_allNodes[i].GameDirector = director;
 			parentID = _designer._nodeDatas[i].ParentID;
 
 			//親ノードがルートノードの場合、親設定の処理をスキップする

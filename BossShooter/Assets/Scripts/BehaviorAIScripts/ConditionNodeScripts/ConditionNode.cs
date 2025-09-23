@@ -45,6 +45,11 @@ public class ConditionNode : NodeBace
         }
     }
 
+    public override void OnStart()
+    {
+        _myJudge.GameDirector = _gameDirector;
+    }
+
     public override NodeState OnUpdate()
     {
 		return _myJudge.IsJudge();

@@ -22,12 +22,12 @@ public class OnDiffusionShot : ActionBace
         }
 
         //エネミーの状態によって連射回数を変化させる
-        if (GameDirector.Instance.IsEnemyHPMin())
+        if (_gameDirector.IsEnemyHPMin())
         {
             _offsets = _enemyData.MinOffsets;
             _bulletCount = _enemyData.MinBulletCount;
         }
-        else if (GameDirector.Instance.IsEnemyHPMid())
+        else if (_gameDirector.IsEnemyHPMid())
         {
             _offsets = _enemyData.MidOffsets;
             _bulletCount = _enemyData.MidBulletCount;
@@ -45,7 +45,7 @@ public class OnDiffusionShot : ActionBace
         GetShotPosition();
 
         //弾オブジェクトをプレイヤーに向かう座標を0とする
-        _rotate = (GameDirector.Instance.CurrentData.PlayerPosition - _shotInstancePosition).normalized;
+        _rotate = (_gameDirector.CurrentData.PlayerPosition - _shotInstancePosition).normalized;
         _rotateAngle = Mathf.Atan2(_rotate.y, _rotate.x) * Mathf.Rad2Deg;
         
         //角度をつけて一定数生成する
@@ -53,7 +53,7 @@ public class OnDiffusionShot : ActionBace
         {
             _bullet = _pools.TargetPool.DequeueObject(_shotInstancePosition);
             _bullet.transform.rotation = Quaternion.Euler(0, 0, _rotateAngle + _offsets[i]);
-            GameDirector.Instance.CurrentData.TargetDirector.SetActiveBullet(_bullet);
+            _gameDirector.CurrentData.TargetDirector.SetActiveBullet(_bullet);
         }
 
         return NodeBace.NodeState.Success;

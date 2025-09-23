@@ -9,6 +9,8 @@ using UnityEngine.InputSystem;
 public class PlayerController:CollisionInterface
 {
     #region 変数
+    private CheckSelfCollider _colliderChecker;
+    private GameDirector _gameDirector;
     private PlayerData _playerData;
     private BulletData _playerBulletData;
     private GameObject _player;
@@ -56,8 +58,11 @@ public class PlayerController:CollisionInterface
     #endregion
 
     #region メソッド
-    public PlayerController(PlayerData data,GameObject player,BulletData bulletData)
+    public PlayerController(GameDirector director,CheckSelfCollider checker,PlayerData data,GameObject player,BulletData bulletData)
     {
+        _gameDirector = director;
+        _colliderChecker = checker;
+
         //プレイヤーとプレイヤーデータを取得
         _playerData = data;
         _playerBulletData = bulletData; 
@@ -72,7 +77,7 @@ public class PlayerController:CollisionInterface
         _playerCollider.Radius = _playerData.PlayerColliderRadius;
         _playerCollider.MyObjectType = SelfCircleCollider.ObjectType.Player;
         _playerCollider.MyCollisionInterface = this;
-        CheckSelfCollider.Instance.SetColliderObject(_player);
+        _colliderChecker.SetColliderObject(_player);
 
         //インプットアクションの初期化
         _actions = new Actions();
@@ -92,14 +97,14 @@ public class PlayerController:CollisionInterface
         _actions.Director.Pouse.canceled += OnPouse;
 
         //弾のプールを生成
-        _objectPool = new ObjectPool(_playerBulletData.Bullet, _playerBulletData.InstanceCount,_playerBulletData.BulletColliderRadius,_playerBulletData.BulletObjectType,BulletData.BulletType.Straight);
-        _bulletDirector = new BulletDirector(_playerBulletData.InstanceCount,_playerBulletData.BulletSpeed,_objectPool,_playerBulletData.MyType);
+        _objectPool = new ObjectPool(_colliderChecker,_playerBulletData.Bullet, _playerBulletData.InstanceCount,_playerBulletData.BulletColliderRadius,_playerBulletData.BulletObjectType,BulletData.BulletType.Straight);
+        _bulletDirector = new BulletDirector(_gameDirector,_playerBulletData.InstanceCount,_playerBulletData.BulletSpeed,_objectPool,_playerBulletData.MyType);
 
         //アクションクラスのインスタンスを生成
         _playerMove = new PlayerMove( _playerData.NormalSpeed, _playerData.LowSpeed, _player.transform);
     }
 
-    private void OnDisable()
+    public void OnDisable()
     {
         //インプットアクションの終了
         _actions.Disable();
@@ -107,6 +112,8 @@ public class PlayerController:CollisionInterface
 
     public void OnUpdate()
     {
+        _bulletDirector.OnUpdate();
+
         //死亡している場合、リスポーンまで待機し、リスポーン後に無敵状態となる
         if (_isDeath)
         {
@@ -135,18 +142,18 @@ public class PlayerController:CollisionInterface
         //死亡していない場合現在のプレイヤーの座標をデータに渡し、死亡中の場合、リスポーンポイントを渡す
         if (_isDeath)
         {
-            GameDirector.Instance.CurrentData.PlayerPosition = _playerData.PlayerInstancePosition;
+            _gameDirector.CurrentData.PlayerPosition = _playerData.PlayerInstancePosition;
             return;
         }
         else
         {
-            GameDirector.Instance.CurrentData.PlayerPosition = _player.transform.position;
+            _gameDirector.CurrentData.PlayerPosition = _player.transform.position;
         }
 
         //ショット操作がされているかつクールタイムが明けている場合、弾を発射する
         if (_canShot && _inputShot)
         {
-            for(int i = 0;i < GameDirector.Instance.GetPlayerBulletCount(); i++)
+            for(int i = 0;i < _gameDirector.GetPlayerBulletCount(); i++)
             {
                 //弾の生成位置を計算
                 _bulletInstanceXPosition = _player.transform.position.x;
@@ -165,9 +172,7 @@ public class PlayerController:CollisionInterface
                 _nowCoolTime = 0;
                 _canShot = true;
             }
-        }
-
-        _bulletDirector.OnUpdate();
+        }      
     }
 
     public void OnFixedUpdata()
@@ -214,7 +219,7 @@ public class PlayerController:CollisionInterface
     private void OnShot(InputAction.CallbackContext context)
     {
         //ポーズ中であれば作動しない
-        if (GameDirector.Instance.IsPouse)
+        if (_gameDirector.IsPouse)
         {
             return;
         }
@@ -234,8 +239,8 @@ public class PlayerController:CollisionInterface
     /// </summary>
     private void OnBomb(InputAction.CallbackContext context)
     {
-        //ポーズ中であれば作動しない
-        if (GameDirector.Instance.IsPouse)
+        //ポーズ中か死亡中であれば作動しない
+        if (_gameDirector.IsPouse || _isDeath)
         {
             return ;
         }
@@ -246,8 +251,8 @@ public class PlayerController:CollisionInterface
             if(_myBomb > 0)
             {
                 _myBomb--;
-                GameDirector.Instance.RemoveBomb();
-                GameDirector.Instance.ClearAllBullet();
+                _gameDirector.RemoveBomb();
+                _gameDirector.ClearAllBullet();
             }
         }
     }
@@ -259,7 +264,7 @@ public class PlayerController:CollisionInterface
     {
         if (context.performed)
         {
-            GameDirector.Instance.ChangePouse();
+            _gameDirector.ChangePouse();
         }
     }
 
@@ -275,11 +280,11 @@ public class PlayerController:CollisionInterface
             //残機がゼロ未満になったら、ゲームオーバーになる
             if(0 > _myLife)
             {
-                GameDirector.Instance.OverGame();
+                _gameDirector.OverGame();
             }
             else
             {
-                GameDirector.Instance.RemoveLife();
+                _gameDirector.RemoveLife();
             }
         }
     }

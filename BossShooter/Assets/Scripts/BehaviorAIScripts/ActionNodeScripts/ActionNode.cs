@@ -56,6 +56,7 @@ public class ActionNode : NodeBace
         _myControll.EnemyData = _enemyData;
         _myControll.Pools = _pools;
         _myControll.Index = _index;
+        _myControll.GameDirector = _gameDirector;
 
         _myControll.Initialized();
     }

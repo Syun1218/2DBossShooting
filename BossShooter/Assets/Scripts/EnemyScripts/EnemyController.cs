@@ -7,7 +7,9 @@ using System.Collections.Generic;
 /// </summary>
 public class EnemyController:CollisionInterface
 {
-	#region 変数
+    #region 変数
+    private CheckSelfCollider _colliderChecker;
+    private GameDirector _gameDirector;
 	private GameObject _enemy;
 	private GameObject[] _subEnemies;
 	private GameObject _enemyParent;
@@ -40,8 +42,11 @@ public class EnemyController:CollisionInterface
 	#endregion
 
 	#region メソッド
-	public EnemyController(GameObject enemy,GameObject[] subEnemies,GameObject parent,EnemyData data)
+	public EnemyController(GameDirector director,CheckSelfCollider checker,GameObject enemy,GameObject[] subEnemies,GameObject parent,EnemyData data)
     {
+		_gameDirector = director;
+		_colliderChecker = checker;
+
 		//エネミーデータを受け取る
 		_enemy = enemy;
 		_subEnemies = subEnemies;
@@ -50,27 +55,27 @@ public class EnemyController:CollisionInterface
 		_hp = _enemyData.MaxHP;
 
 		//弾のプールを生成する
-		_pools = new EnemyBulletPools(_enemyData);
+		_pools = new EnemyBulletPools(_enemyData,_colliderChecker);
 
 		//弾の管理用クラスをデータに格納
-		GameDirector.Instance.CurrentData.HomingDirector = new BulletDirector(_enemyData.HomingBulletData.InstanceCount, _enemyData.HomingBulletData.BulletSpeed,_pools.HomingPool ,_enemyData.HomingBulletData.MyType,_enemyData.HomingBulletData.BulletScore);
-		GameDirector.Instance.CurrentData.DiffusionDirector = new BulletDirector(_enemyData.DiffusionBulletData.InstanceCount, _enemyData.DiffusionBulletData.BulletSpeed,_pools.DiffusionPool ,_enemyData.DiffusionBulletData.MyType, _enemyData.DiffusionBulletData.BulletScore);
-		GameDirector.Instance.CurrentData.TargetDirector = new BulletDirector(_enemyData.TargetBulletData.InstanceCount, _enemyData.TargetBulletData.BulletSpeed,_pools.TargetPool ,_enemyData.TargetBulletData.MyType, _enemyData.TargetBulletData.BulletScore);
+		_gameDirector.CurrentData.HomingDirector = new BulletDirector(_gameDirector,_enemyData.HomingBulletData.InstanceCount, _enemyData.HomingBulletData.BulletSpeed,_pools.HomingPool ,_enemyData.HomingBulletData.MyType,_enemyData.HomingBulletData.BulletScore);
+		_gameDirector.CurrentData.DiffusionDirector = new BulletDirector(_gameDirector,_enemyData.DiffusionBulletData.InstanceCount, _enemyData.DiffusionBulletData.BulletSpeed,_pools.DiffusionPool ,_enemyData.DiffusionBulletData.MyType, _enemyData.DiffusionBulletData.BulletScore);
+		_gameDirector.CurrentData.TargetDirector = new BulletDirector(_gameDirector, _enemyData.TargetBulletData.InstanceCount, _enemyData.TargetBulletData.BulletSpeed,_pools.TargetPool ,_enemyData.TargetBulletData.MyType, _enemyData.TargetBulletData.BulletScore);
 
 		//エネミーを衝突判定の対象に加える
 		_enemyCollider = _enemy.GetComponent<SelfCircleCollider>();
 		_enemyCollider.Radius = _enemyData.EnemyColliderRadius;
 		_enemyCollider.MyObjectType = SelfCircleCollider.ObjectType.Enemy;
 		_enemyCollider.MyCollisionInterface = this;
-		CheckSelfCollider.Instance.SetColliderObject(_enemy);
+		_colliderChecker.SetColliderObject(_enemy);
 
 		//ゲームデータを更新
-		GameDirector.Instance.CurrentData.SubEnemiesPosition = new Vector2[_subEnemies.Length];
-		GameDirector.Instance.CurrentData.IsDieSubEnemies = new bool[_subEnemies.Length];
+		_gameDirector.CurrentData.SubEnemiesPosition = new Vector2[_subEnemies.Length];
+		_gameDirector.CurrentData.IsDieSubEnemies = new bool[_subEnemies.Length];
 
 		for(int i = 0;i < _subEnemies.Length; i++)
 		{
-			GameDirector.Instance.CurrentData.IsDieSubEnemies[i] = false;
+			_gameDirector.CurrentData.IsDieSubEnemies[i] = false;
 		}
 
 		//エネミーの各部位ごとに衝突判定の対象に加え、コントローラーを設定
@@ -80,28 +85,28 @@ public class EnemyController:CollisionInterface
 			_subEnemyCollider = _subEnemies[i].GetComponent<SelfCircleCollider>();
 			_subEnemyCollider.Radius = _enemyData.SubEnemyColliderRadius[i];
 			_subEnemyCollider.MyObjectType = SelfCircleCollider.ObjectType.Enemy;
-			CheckSelfCollider.Instance.SetColliderObject(_subEnemies[i]);
-			_subEnemyControllers[i] = new SubEnemyController(_subEnemies[i], _subEnemyCollider, _enemyData.SubEnemyTreeDesigners[i],_enemyData,_pools,i);
+			_colliderChecker.SetColliderObject(_subEnemies[i]);
+			_subEnemyControllers[i] = new SubEnemyController(_gameDirector,_subEnemies[i], _subEnemyCollider, _enemyData.SubEnemyTreeDesigners[i],_enemyData,_pools,i);
         }
 
 		//AIを構築する
-		_root = new RootNode(_enemyData.TreeDesigner, _enemy,_enemyData,_pools);
+		_root = new RootNode(_gameDirector,_enemyData.TreeDesigner, _enemy,_enemyData,_pools);
     }
 
 	public void OnUpdate()
     {
 		//ゲームデータを更新
-		GameDirector.Instance.CurrentData.EnemyCorePosition = _enemy.transform.position;
+		_gameDirector.CurrentData.EnemyCorePosition = _enemy.transform.position;
 
 		for(int i = 0;i < _subEnemies.Length; i++)
         {
-			GameDirector.Instance.CurrentData.SubEnemiesPosition[i] = _subEnemies[i].transform.position;
+			_gameDirector.CurrentData.SubEnemiesPosition[i] = _subEnemies[i].transform.position;
         }
 
 		//弾管理オブジェクトを作動させる
-		GameDirector.Instance.CurrentData.HomingDirector.OnUpdate();
-		GameDirector.Instance.CurrentData.DiffusionDirector.OnUpdate();
-		GameDirector.Instance.CurrentData.TargetDirector.OnUpdate();
+		_gameDirector.CurrentData.HomingDirector.OnUpdate();
+		_gameDirector.CurrentData.DiffusionDirector.OnUpdate();
+		_gameDirector.CurrentData.TargetDirector.OnUpdate();
 	}
 
 	public void OnFixedUpdate()
@@ -114,9 +119,9 @@ public class EnemyController:CollisionInterface
 		}
 
 		//弾管理オブジェクトを作動させる
-		GameDirector.Instance.CurrentData.HomingDirector.OnFixedUpdate();
-		GameDirector.Instance.CurrentData.DiffusionDirector.OnFixedUpdate();
-		GameDirector.Instance.CurrentData.TargetDirector.OnFixedUpdate();
+		_gameDirector.CurrentData.HomingDirector.OnFixedUpdate();
+		_gameDirector.CurrentData.DiffusionDirector.OnFixedUpdate();
+		_gameDirector.CurrentData.TargetDirector.OnFixedUpdate();
 
         //AIのアクションを実行させる
         _state = _root.OnUpdate();
@@ -168,7 +173,7 @@ public class EnemyController:CollisionInterface
 			//体力がゼロなった場合、進行スクリプトに通知する
 			if(0 >= _hp)
             {
-				GameDirector.Instance.OverGame();
+				_gameDirector.OverGame();
             }
 		}
 	}

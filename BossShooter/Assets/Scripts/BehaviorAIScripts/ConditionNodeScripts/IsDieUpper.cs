@@ -19,7 +19,7 @@ public class IsDieUpper : ConditionBace
     #region メソッド
     public override NodeBace.NodeState IsJudge()
     {
-        if (GameDirector.Instance.CurrentData.IsDieSubEnemies[UPPER_INDEX])
+        if (_gameDirector.CurrentData.IsDieSubEnemies[UPPER_INDEX])
         {
             return NodeBace.NodeState.Success;
         }

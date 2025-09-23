@@ -8,6 +8,7 @@ using System.Collections.Generic;
 public class BulletDirector
 {
 	#region 変数
+	private GameDirector _gameDirector;
 	private GameObject[] _bulletArray;
 	private SelfCircleCollider[] _bulletColliderArray;
 	private int _maxCount;
@@ -42,8 +43,10 @@ public class BulletDirector
 	#endregion
 
 	#region メソッド
-	public BulletDirector(int bulletCount,float bulletSpeed,ObjectPool pool,BulletData.BulletType type,int score = 0)
+	public BulletDirector(GameDirector director,int bulletCount,float bulletSpeed,ObjectPool pool,BulletData.BulletType type,int score = 0)
     {
+		_gameDirector = director;
+
 		//弾の生成数分の配列を確保する
 		_bulletArray = new GameObject[bulletCount];
 		_bulletColliderArray = new SelfCircleCollider[bulletCount];
@@ -171,7 +174,7 @@ public class BulletDirector
                 if (_isHoming)
                 {
 					//プレイヤーとの位置関係によって±30度までの緩やかな回転をさせる
-					_targetAngle = Vector2.SignedAngle(-_bulletArray[i].transform.right, (GameDirector.Instance.CurrentData.PlayerPosition - (Vector2)_bulletArray[i].transform.position).normalized);
+					_targetAngle = Vector2.SignedAngle(-_bulletArray[i].transform.right, (_gameDirector.CurrentData.PlayerPosition - (Vector2)_bulletArray[i].transform.position).normalized);
 					_rotateStep = ROTATE_SPEED * Time.deltaTime;
 					_frameRotate = Mathf.Clamp(_targetAngle, -_rotateStep, _rotateStep);
 					_totalAngle = _desideTortal + _frameRotate;
@@ -211,7 +214,7 @@ public class BulletDirector
 					_isHoming = true;
 					_targetAngle = 0;
 					_desideTortal = 0;
-					GameDirector.Instance.CurrentData.IsExistenceHomingBullet = false;
+					_gameDirector.CurrentData.IsExistenceHomingBullet = false;
 				}
 			}
 		}
@@ -278,7 +281,7 @@ public class BulletDirector
         {
             if (_bulletArray[i] is not null)
             {
-				GameDirector.Instance.ScoreDirector.AddScore(_bulletsScore);
+				_gameDirector.ScoreDirector.AddScore(_bulletsScore);
                 _bulletPool.EnqueueObject(_bulletArray[i]);
                 _bulletArray[i] = null;
                 _bulletColliderArray[i] = null;
