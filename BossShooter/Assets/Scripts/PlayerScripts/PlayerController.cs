@@ -28,15 +28,31 @@ public class PlayerController:CollisionInterface
     private bool _isDeath = false;
     private float _nowRespawnTime = 0;
     private float _nowInvicibleTime = 0;
+    private float _bulletInstanceXPosition = 0;
 
     //定数
     private readonly Vector2 _deathPoint = new Vector2(80, 0);
     private const float RESPAWN_TARGET_TIME = 0.75f;
     private const float INVICIBLE_TARGET_TIME = 3f;
+    private const float X_OFFSET = 0.3f;
     #endregion
 
     #region プロパティ
+    /// <summary>
+    /// 現在の残機
+    /// </summary>
+    public int MyLife
+    {
+        get { return _myLife; }
+    }
 
+    /// <summary>
+    /// 現在のボム数
+    /// </summary>
+    public int MyBomb
+    {
+        get { return _myBomb; }
+    }
     #endregion
 
     #region メソッド
@@ -70,6 +86,10 @@ public class PlayerController:CollisionInterface
         _actions.Player.LowSpeed.canceled += OnLawSpeed;
         _actions.Player.Shot.performed += OnShot;
         _actions.Player.Shot.canceled += OnShot;
+        _actions.Player.Bomb.performed += OnBomb;
+        _actions.Player.Bomb.canceled += OnBomb;
+        _actions.Director.Pouse.performed += OnPouse;
+        _actions.Director.Pouse.canceled += OnPouse;
 
         //弾のプールを生成
         _objectPool = new ObjectPool(_playerBulletData.Bullet, _playerBulletData.InstanceCount,_playerBulletData.BulletColliderRadius,_playerBulletData.BulletObjectType,BulletData.BulletType.Straight);
@@ -126,8 +146,15 @@ public class PlayerController:CollisionInterface
         //ショット操作がされているかつクールタイムが明けている場合、弾を発射する
         if (_canShot && _inputShot)
         {
-            _bulletDirector.SetActiveBullet(_objectPool.DequeueObject(_player.transform.position));
-            _canShot = false;
+            for(int i = 0;i < GameDirector.Instance.GetPlayerBulletCount(); i++)
+            {
+                //弾の生成位置を計算
+                _bulletInstanceXPosition = _player.transform.position.x;
+                _bulletInstanceXPosition -= X_OFFSET * i;
+
+                _bulletDirector.SetActiveBullet(_objectPool.DequeueObject(new Vector2(_bulletInstanceXPosition,_player.transform.position.y)));
+                _canShot = false;
+            }
         }
         //ショットのクールタイムを計測する
         else if(!_canShot)
@@ -145,14 +172,16 @@ public class PlayerController:CollisionInterface
 
     public void OnFixedUpdata()
     {
-        //死亡時には処理をしない
+        _bulletDirector.OnFixedUpdate();
+
+        //死亡時には移動処理をしない
         if (_isDeath)
         {
             return;
         }
 
         _playerMove.MovePlayer(_isRawSpeed, _moveValue);
-        _bulletDirector.OnFixedUpdate();
+        
     }
 
     /// <summary>
@@ -184,6 +213,12 @@ public class PlayerController:CollisionInterface
     /// </summary>
     private void OnShot(InputAction.CallbackContext context)
     {
+        //ポーズ中であれば作動しない
+        if (GameDirector.Instance.IsPouse)
+        {
+            return;
+        }
+
         if (context.performed)
         {
             _inputShot = true;
@@ -194,19 +229,57 @@ public class PlayerController:CollisionInterface
         }
     }
 
+    /// <summary>
+    /// ボム使用入力の取得
+    /// </summary>
+    private void OnBomb(InputAction.CallbackContext context)
+    {
+        //ポーズ中であれば作動しない
+        if (GameDirector.Instance.IsPouse)
+        {
+            return ;
+        }
+
+        if (context.performed)
+        {
+            //ボム回数が残っているのであれば使用する
+            if(_myBomb > 0)
+            {
+                _myBomb--;
+                GameDirector.Instance.RemoveBomb();
+                GameDirector.Instance.ClearAllBullet();
+            }
+        }
+    }
+
+    /// <summary>
+    /// ポーズ入力取得処理
+    /// </summary>
+    public void OnPouse(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            GameDirector.Instance.ChangePouse();
+        }
+    }
+
     public void OnCollision(SelfCircleCollider.ObjectType otherType)
     {
         //無敵状態でないかつ生きているなら残機を減らす
         if (!_isInvicible && !_isDeath)
         {
+            _isDeath = true;
             _myLife--;
             _player.transform.position = _deathPoint;
-            _isDeath = true;
 
             //残機がゼロ未満になったら、ゲームオーバーになる
             if(0 > _myLife)
             {
                 GameDirector.Instance.OverGame();
+            }
+            else
+            {
+                GameDirector.Instance.RemoveLife();
             }
         }
     }

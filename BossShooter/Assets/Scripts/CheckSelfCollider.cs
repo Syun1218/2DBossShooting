@@ -56,6 +56,11 @@ public class CheckSelfCollider : MonoBehaviour
 
     private void Update()
     {
+        if (GameDirector.Instance.IsPouse)
+        {
+            return;
+        }
+
         //衝突判定を行う
         for(int i = 0;i < _colliders.Count; i++)
         {
@@ -100,7 +105,6 @@ public class CheckSelfCollider : MonoBehaviour
                 {
                     //衝突処理を行う
                     _colliders[i].MyCollisionInterface.OnCollision(_colliders[j].MyObjectType);
-                    _colliders[j].MyCollisionInterface.OnCollision(_colliders[i].MyObjectType);
                     return;
                 }
             }
@@ -127,7 +131,6 @@ public class CheckSelfCollider : MonoBehaviour
                 {
                     //衝突処理を行う
                     _colliders[i].MyCollisionInterface.OnCollision(_colliders[j].MyObjectType);
-                    _colliders[j].MyCollisionInterface.OnCollision(_colliders[i].MyObjectType);
                     return;
                 }
             }
@@ -154,7 +157,6 @@ public class CheckSelfCollider : MonoBehaviour
                 {
                     //衝突処理を行う
                     _colliders[i].MyCollisionInterface.OnCollision(_colliders[j].MyObjectType);
-                    _colliders[j].MyCollisionInterface.OnCollision(_colliders[i].MyObjectType);
                     return;
                 }
             }
@@ -180,8 +182,9 @@ public class CheckSelfCollider : MonoBehaviour
                 if (CheckCollision(_colliders[i], _colliders[j]))
                 {
                     //衝突処理を行う
+                    _colliders[i].GetComponent<SelfCircleCollider>().OtherObjectType = _colliders[j].GetComponent<SelfCircleCollider>().MyObjectType;
+
                     _colliders[i].MyCollisionInterface.OnCollision(_colliders[j].MyObjectType);
-                    _colliders[j].MyCollisionInterface.OnCollision(_colliders[i].MyObjectType);
                     return;
                 }
             }

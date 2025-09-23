@@ -17,6 +17,7 @@ public class SelfCircleCollider : MonoBehaviour,CollisionInterface
 
     //弾の衝突後処理用変数
     private bool _isCollision = false;
+    private ObjectType _otherObjectType;
 	#endregion
 
 	#region プロパティ
@@ -61,6 +62,11 @@ public class SelfCircleCollider : MonoBehaviour,CollisionInterface
     {
         set { _bulletType = value; }
     }
+
+    public ObjectType OtherObjectType
+    {
+        set { _otherObjectType = value; }
+    }
 	#endregion
 
 	#region メソッド
@@ -92,11 +98,16 @@ public class SelfCircleCollider : MonoBehaviour,CollisionInterface
     {
         _isCollision = true;
 
-        //これが敵の弾オブジェクトであれば、スコアを加算
+        //これが敵の弾オブジェクトであれば追加処理を行う
         if(_myObjectType == ObjectType.EnemyBullet)
         {
-            GameDirector.Instance.ScoreDirector.AddScore(_bulletScore);
-
+            //衝突相手がプレイヤーの弾であればスコアを加算
+            if (_otherObjectType == ObjectType.PlayerBullet)
+            {
+                GameDirector.Instance.ScoreDirector.AddScore(_bulletScore);
+            }
+            
+            
             //ホーミング弾であればデータ更新を行う
             if (_bulletType == BulletData.BulletType.Homing)
             {

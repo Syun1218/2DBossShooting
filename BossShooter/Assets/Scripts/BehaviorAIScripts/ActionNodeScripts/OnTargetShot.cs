@@ -15,14 +15,10 @@ public class OnTargetShot : ActionBace
     private int _nowCount;
     private float _nowTime;
     private bool _canShot = true;
+    private int _nowShotCount;
 
     //定数
     private const float TARGET_TIME = 0.05f;
-    private const int BULLET_SHOT_COUNT = 3;
-    #endregion
-
-    #region プロパティ
-
     #endregion
 
     #region メソッド
@@ -36,6 +32,20 @@ public class OnTargetShot : ActionBace
         _rotateAngle = 0;
         _nowCount = 0;
         _canShot = true;
+
+        //エネミーの状態によって連射回数を変化させる
+        if (GameDirector.Instance.IsEnemyHPMin())
+        {
+            _nowShotCount = _enemyData.MinRapidFireCount;
+        }
+        else if (GameDirector.Instance.IsEnemyHPMid())
+        {
+            _nowShotCount = _enemyData.MidRapidFireCount;
+        }
+        else
+        {
+            _nowShotCount = _enemyData.NormalRapidFireCount;
+        }
     }
 
     public override NodeBace.NodeState OnAction()
@@ -76,7 +86,7 @@ public class OnTargetShot : ActionBace
         _nowCount++;
 
         //指定数の発射が終了した場合は成功を返し、終了していない場合は実行中を返す
-        if (_nowCount >= BULLET_SHOT_COUNT)
+        if (_nowCount >= _nowShotCount)
         {
             return NodeBace.NodeState.Success;
         }

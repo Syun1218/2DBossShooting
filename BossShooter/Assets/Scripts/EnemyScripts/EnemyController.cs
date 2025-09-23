@@ -33,7 +33,10 @@ public class EnemyController:CollisionInterface
 	#endregion
 
 	#region プロパティ
-
+	public int HP
+	{
+		get { return _hp; }
+	}
 	#endregion
 
 	#region メソッド
@@ -50,9 +53,9 @@ public class EnemyController:CollisionInterface
 		_pools = new EnemyBulletPools(_enemyData);
 
 		//弾の管理用クラスをデータに格納
-		GameDirector.Instance.CurrentData.HomingDirector = new BulletDirector(_enemyData.HomingBulletData.InstanceCount, _enemyData.HomingBulletData.BulletSpeed,_pools.HomingPool ,_enemyData.HomingBulletData.MyType);
-		GameDirector.Instance.CurrentData.DiffusionDirector = new BulletDirector(_enemyData.DiffusionBulletData.InstanceCount, _enemyData.DiffusionBulletData.BulletSpeed,_pools.DiffusionPool ,_enemyData.DiffusionBulletData.MyType);
-		GameDirector.Instance.CurrentData.TargetDirector = new BulletDirector(_enemyData.TargetBulletData.InstanceCount, _enemyData.TargetBulletData.BulletSpeed,_pools.TargetPool ,_enemyData.TargetBulletData.MyType);
+		GameDirector.Instance.CurrentData.HomingDirector = new BulletDirector(_enemyData.HomingBulletData.InstanceCount, _enemyData.HomingBulletData.BulletSpeed,_pools.HomingPool ,_enemyData.HomingBulletData.MyType,_enemyData.HomingBulletData.BulletScore);
+		GameDirector.Instance.CurrentData.DiffusionDirector = new BulletDirector(_enemyData.DiffusionBulletData.InstanceCount, _enemyData.DiffusionBulletData.BulletSpeed,_pools.DiffusionPool ,_enemyData.DiffusionBulletData.MyType, _enemyData.DiffusionBulletData.BulletScore);
+		GameDirector.Instance.CurrentData.TargetDirector = new BulletDirector(_enemyData.TargetBulletData.InstanceCount, _enemyData.TargetBulletData.BulletSpeed,_pools.TargetPool ,_enemyData.TargetBulletData.MyType, _enemyData.TargetBulletData.BulletScore);
 
 		//エネミーを衝突判定の対象に加える
 		_enemyCollider = _enemy.GetComponent<SelfCircleCollider>();
@@ -63,6 +66,12 @@ public class EnemyController:CollisionInterface
 
 		//ゲームデータを更新
 		GameDirector.Instance.CurrentData.SubEnemiesPosition = new Vector2[_subEnemies.Length];
+		GameDirector.Instance.CurrentData.IsDieSubEnemies = new bool[_subEnemies.Length];
+
+		for(int i = 0;i < _subEnemies.Length; i++)
+		{
+			GameDirector.Instance.CurrentData.IsDieSubEnemies[i] = false;
+		}
 
 		//エネミーの各部位ごとに衝突判定の対象に加え、コントローラーを設定
 		_subEnemyControllers = new SubEnemyController[_subEnemies.Length];
@@ -141,6 +150,12 @@ public class EnemyController:CollisionInterface
         {
 			_isUp = true;
         }
+
+		//部位オブジェクトのAIを作動させる
+		for(int i = 0;i < _subEnemies.Length;i++)
+		{
+			_subEnemyControllers[i].OnFixedUpdate();
+		}
     }
 
 	public void OnCollision(SelfCircleCollider.ObjectType otherType)

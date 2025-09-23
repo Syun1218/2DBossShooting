@@ -14,9 +14,13 @@ public class GameDirector : MonoBehaviour
     //進行変数
     private static GameDirector _instance;
     private GameCurrentData _currentData;
+    private bool _isPouse = false;
 
     //UI変数
     private ScoreDirector _scoreDirector;
+    private EnemyHPUI _enemyHPUI;
+    private LifeUIDirector _lifeUIDirector;
+    private BombUIDirector _bombUIDirector;
 
     //プレイヤー変数
     private AsyncOperationHandle<PlayerData> _loadPlayerData;
@@ -32,6 +36,9 @@ public class GameDirector : MonoBehaviour
     private GameObject _enemy;
     private GameObject[] _subEnemies;
     private EnemyController _enemyController;
+
+    //定数
+    private const int NORMAL_TIMESCALE = 1;
     #endregion
 
     #region プロパティ
@@ -49,6 +56,12 @@ public class GameDirector : MonoBehaviour
     public ScoreDirector ScoreDirector
     {
         get { return _scoreDirector; }
+    }
+
+    public bool IsPouse
+    {
+        get { return _isPouse; }
+        set { _isPouse = value; }
     }
     #endregion
 
@@ -69,15 +82,18 @@ public class GameDirector : MonoBehaviour
         //データ保存用クラスを生成する
         _currentData = new GameCurrentData();
 
-        //UIクラスを生成する
-        _scoreDirector = new ScoreDirector();
-
         //スクリプタブルオブジェクトをロードする
         _loadPlayerData = Addressables.LoadAssetAsync<PlayerData>("PlayerData");
         _playerData = _loadPlayerData.WaitForCompletion();
         _playerBulletData = _playerData.BulletData;
         _loadEnemyData = Addressables.LoadAssetAsync<EnemyData>("BossData");
         _enemyData = _loadEnemyData.WaitForCompletion();
+
+        //UIクラスを生成する
+        _scoreDirector = new ScoreDirector();
+        _enemyHPUI = new EnemyHPUI(_enemyData.MaxHP);
+        _lifeUIDirector = new LifeUIDirector(_playerData.MaxLife);
+        _bombUIDirector = new BombUIDirector(_playerData.MaxBomb);
 
         //各オブジェクトを生成する
         _player = Instantiate(_playerData.Player, _playerData.PlayerInstancePosition, Quaternion.identity);
@@ -100,8 +116,14 @@ public class GameDirector : MonoBehaviour
 
     private void Update()
     {
+        if (_isPouse)
+        {
+            return;
+        }
+
         _playerController.OnUpdate();
         _enemyController.OnUpdate();
+        _enemyHPUI.ChangeUI(_enemyController.HP);
     }
 
     private void FixedUpdate()
@@ -123,9 +145,78 @@ public class GameDirector : MonoBehaviour
 	/// </summary>
 	public void ClearAllBullet()
     {
-        _currentData.HomingDirector.CleatBullets();
-        _currentData.DiffusionDirector.CleatBullets();
-        _currentData.TargetDirector.CleatBullets();
+        _currentData.HomingDirector.ClearBullets();
+        _currentData.DiffusionDirector.ClearBullets();
+        _currentData.TargetDirector.ClearBullets();
+    }
+
+    /// <summary>
+    /// エネミーが2段階目になっているか
+    /// </summary>
+    public bool IsEnemyHPMin()
+    {
+        return _enemyData.MinHP >= _enemyController.HP;
+    }
+
+    /// <summary>
+    /// エネミーが1段階目になっているか
+    /// </summary>
+    public bool IsEnemyHPMid()
+    {
+        return _enemyData.MidHP >= _enemyController.HP;
+    }
+
+    /// <summary>
+    /// プレイヤーの弾の連射数を返す
+    /// </summary>
+    /// <returns>弾の連射数</returns>
+    public int GetPlayerBulletCount()
+    {
+        if(_scoreDirector.Score >= _playerData.MaxScore)
+        {
+            return _playerData.MaxBulletCount;
+        }
+        else if(_scoreDirector.Score >= _playerData.MidScore)
+        {
+            return _playerData.MidBulletCount;
+        }
+        else
+        {
+            return _playerData.NormalBulletCount;
+        }
+    }
+
+    /// <summary>
+    /// 残機UIの非表示処理を呼ぶ中継
+    /// </summary>
+    public void RemoveLife()
+    {
+        _lifeUIDirector.RemoveLifeImage();
+    }
+
+    /// <summary>
+    /// ボムUIの非表示処理を呼ぶ中継
+    /// </summary>
+    public void RemoveBomb()
+    {
+        _bombUIDirector.RemoveBombImage();
+    }
+
+    /// <summary>
+    /// ポーズ、ポーズ解除を行う
+    /// </summary>
+    public void ChangePouse()
+    {
+        if (_isPouse)
+        {
+            _isPouse = false;
+            Time.timeScale = NORMAL_TIMESCALE;
+        }
+        else
+        {
+            _isPouse= true;
+            Time.timeScale = 0;
+        }
     }
     #endregion
 }

@@ -14,17 +14,122 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeDatas:
   - _nodeName: 
-    _myType: 4
+    _myType: 3
     _nodeID: 0
     _parentID: 0
     _actionType: 0
+    _conditionType: 0
   - _nodeName: 
-    _myType: 0
+    _myType: 4
     _nodeID: 1
     _parentID: 0
     _actionType: 0
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 1
+    _nodeID: 2
+    _parentID: 1
+    _actionType: 0
+    _conditionType: 2
   - _nodeName: 
     _myType: 0
-    _nodeID: 2
-    _parentID: 0
+    _nodeID: 3
+    _parentID: 1
     _actionType: 1
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 0
+    _nodeID: 4
+    _parentID: 1
+    _actionType: 2
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 0
+    _nodeID: 5
+    _parentID: 1
+    _actionType: 0
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 0
+    _nodeID: 6
+    _parentID: 1
+    _actionType: 3
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 0
+    _nodeID: 7
+    _parentID: 1
+    _actionType: 0
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 4
+    _nodeID: 8
+    _parentID: 0
+    _actionType: 0
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 1
+    _nodeID: 9
+    _parentID: 8
+    _actionType: 0
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 0
+    _nodeID: 10
+    _parentID: 8
+    _actionType: 1
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 0
+    _nodeID: 11
+    _parentID: 8
+    _actionType: 0
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 0
+    _nodeID: 12
+    _parentID: 8
+    _actionType: 3
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 4
+    _nodeID: 13
+    _parentID: 0
+    _actionType: 0
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 1
+    _nodeID: 14
+    _parentID: 13
+    _actionType: 0
+    _conditionType: 1
+  - _nodeName: 
+    _myType: 0
+    _nodeID: 15
+    _parentID: 13
+    _actionType: 1
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 0
+    _nodeID: 16
+    _parentID: 13
+    _actionType: 0
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 0
+    _nodeID: 17
+    _parentID: 13
+    _actionType: 2
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 4
+    _nodeID: 18
+    _parentID: 0
+    _actionType: 2
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 0
+    _nodeID: 19
+    _parentID: 18
+    _actionType: 1
+    _conditionType: 0

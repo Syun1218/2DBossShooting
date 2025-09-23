@@ -21,7 +21,20 @@ public class OnIdol : ActionBace
     {
         //合計待機時間をリセットする
         _nowIdolTime = 0;
-        _targetIdolTime = _enemyData.IdolTime;
+
+        //エネミーの状態によって待機時間を変化させる
+        if (GameDirector.Instance.IsEnemyHPMin())
+        {
+            _targetIdolTime = _enemyData.MinIdolTime;
+        }
+        else if (GameDirector.Instance.IsEnemyHPMid())
+        {
+            _targetIdolTime = _enemyData.MidIdolTime;
+        }
+        else
+        {
+            _targetIdolTime = _enemyData.NormalIdolTime;
+        }
     }
 
     public override NodeBace.NodeState OnAction()

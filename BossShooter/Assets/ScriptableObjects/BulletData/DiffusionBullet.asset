@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _bullet: {fileID: 9204960005296712066, guid: ab4a8715049047947b3ad9942d64e8e7, type: 3}
   _myType: 2
-  _instanceCount: 30
+  _instanceCount: 75
   _bulletSpeed: 0.3
   _bulletColliderRadius: 0.15
   _bulletObjectType: 3
-  _bulletScore: 50
+  _bulletScore: 30

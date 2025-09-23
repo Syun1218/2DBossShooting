@@ -21,7 +21,14 @@ public class PlayerData : ScriptableObject
 
     [SerializeField] [Header("プレイヤーの弾発射間隔")] private float _shotCoolTime;
 
-    [SerializeField] [Header("プレイヤーの弾のアドレス")] private BulletData _bulletData;
+    [SerializeField] [Header("プレイヤーの弾のデータ")] private BulletData _bulletData;
+
+    [SerializeField] [Header("プレイヤーの通常時の連射数")] private int _normalBulletCount = 1;
+    [SerializeField] [Header("プレイヤーの1段階目の連射数")] private int _midBulletCount = 1;
+    [SerializeField] [Header("プレイヤーの2段階目の連射数")] private int _maxBulletCount = 1;
+
+    [SerializeField] [Header("プレイヤー1段階目のボーダーのスコア")] private int _midScore;
+    [SerializeField] [Header("プレイヤー2段階目のボーダーのスコア")] private int _maxScore;
 	#endregion
 
 	#region プロパティ
@@ -95,6 +102,46 @@ public class PlayerData : ScriptableObject
     public BulletData BulletData
     {
         get { return _bulletData; }
+    }
+
+    /// <summary>
+    /// プレイヤーの通常時の連射数
+    /// </summary>
+    public int NormalBulletCount
+    {
+        get { return _normalBulletCount; }
+    }
+
+    /// <summary>
+    /// プレイヤーの1段階目の連射数
+    /// </summary>
+    public int MidBulletCount
+    {
+        get { return _midBulletCount; }
+    }
+
+    /// <summary>
+    /// プレイヤーの2段階目の連射数
+    /// </summary>
+    public int MaxBulletCount
+    {
+        get { return _maxBulletCount; }
+    }
+
+    /// <summary>
+    /// プレイヤー1段階目のボーダーのスコア
+    /// </summary>
+    public int MidScore
+    {
+        get { return _midScore; }
+    }
+
+    /// <summary>
+    /// プレイヤー2段階目のボーダーのスコア
+    /// </summary>
+    public int MaxScore
+    {
+        get { return _maxScore; }
     }
 	#endregion
 }

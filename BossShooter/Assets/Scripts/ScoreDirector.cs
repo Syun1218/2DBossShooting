@@ -19,7 +19,10 @@ public class ScoreDirector
 	#endregion
 
 	#region プロパティ
-
+	public int Score
+	{
+		get { return _score; }
+	}
 	#endregion
 
 	#region メソッド

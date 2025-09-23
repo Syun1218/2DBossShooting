@@ -90,8 +90,8 @@ public class RootNode : NodeBace
 				break;
 
             case NodeCreateData.NodeType.Condition:
-                //returnNode = new ConditionNode(_designer._nodeDatas[index].ConditionNode);
-            break;
+				returnNode = new ConditionNode(_designer._nodeDatas[index].ConditionNode);
+				break;
         }
 
         return returnNode;

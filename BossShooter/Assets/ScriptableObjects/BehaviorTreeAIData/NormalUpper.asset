@@ -12,4 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 268bc8daa97a54840a6fe87e4cd6652d, type: 3}
   m_Name: NormalUpper
   m_EditorClassIdentifier: 
-  _nodeDatas: []
+  _nodeDatas:
+  - _nodeName: 
+    _myType: 4
+    _nodeID: 0
+    _parentID: 0
+    _actionType: 0
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 0
+    _nodeID: 1
+    _parentID: 0
+    _actionType: 0
+    _conditionType: 0
+  - _nodeName: 
+    _myType: 0
+    _nodeID: 2
+    _parentID: 0
+    _actionType: 3
+    _conditionType: 0

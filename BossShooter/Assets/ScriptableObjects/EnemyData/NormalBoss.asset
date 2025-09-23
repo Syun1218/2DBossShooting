@@ -24,8 +24,10 @@ MonoBehaviour:
   _subEnemiesColliderRadius:
   - 1.75
   - 1.75
-  _maxHP: 50
-  _subEnemiesMaxHP: 9600000096000000
+  _maxHP: 100
+  _midHP: 75
+  _minHP: 25
+  _subEnemiesMaxHP: 3200000032000000
   _homingBulletData: {fileID: 11400000, guid: b819fe69a00b18f49b007eb6f448e2af, type: 2}
   _diffusionBulletData: {fileID: 11400000, guid: 68d28d3df4eb5d04d9b5f07111adaf70, type: 2}
   _targetBulletData: {fileID: 11400000, guid: c3012b2514411af45a29c9cf10d7e592, type: 2}
@@ -34,4 +36,30 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6ddebbcd32264914f8d42b56d662d799, type: 2}
   - {fileID: 11400000, guid: 947403a76b6b7a84a86b2f3a8b11ab1e, type: 2}
   _speed: 0.01
-  _idolTime: 5
+  _normalIdolTime: 5
+  _midIdolTime: 3
+  _minIdolTime: 1
+  _normalRapidFireCount: 1
+  _midRapidFireCount: 3
+  _minRapidFireCount: 5
+  _normalBulletCount: 3
+  _midBulletCount: 5
+  _minBulletCount: 7
+  _normalOffsets:
+  - 0
+  - 45
+  - -45
+  _midOffsets:
+  - 0
+  - 20
+  - 40
+  - -20
+  - -40
+  _minOffsets:
+  - 0
+  - 20
+  - 40
+  - 60
+  - -20
+  - -40
+  - -60

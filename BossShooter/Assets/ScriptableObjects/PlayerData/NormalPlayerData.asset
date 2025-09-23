@@ -21,3 +21,8 @@ MonoBehaviour:
   _lowSpeed: 0.04
   _shotCoolTime: 0.5
   _bulletData: {fileID: 11400000, guid: 0b3783803ecc3ee47b9a28202b14105e, type: 2}
+  _normalBulletCount: 1
+  _midBulletCount: 2
+  _maxBulletCount: 3
+  _midScore: 250
+  _maxScore: 500

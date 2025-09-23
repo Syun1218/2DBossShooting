@@ -12,7 +12,7 @@ public class NodeCreateData
 	[SerializeField] private int _nodeID;
 	[SerializeField] private int _parentID;
     [SerializeField] private ActionNode.ActionType _actionType;
-    //[SerializeField] private ConditionNode.ConditionType _conditionType;
+    [SerializeField] private ConditionNode.ConditionType _conditionType;
     #endregion
 
     #region プロパティ
@@ -41,10 +41,10 @@ public class NodeCreateData
         get { return _actionType; }
     }
 
-    //public ConditionNode.ConditionType ConditionNode
-    //{
-    //    get { return _conditionType; }
-    //}
+    public ConditionNode.ConditionType ConditionNode
+    {
+        get { return _conditionType; }
+    }
     #endregion
 
     public enum NodeType

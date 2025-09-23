@@ -16,6 +16,7 @@ public class BulletDirector
 	private ObjectPool _bulletPool;
 	private BulletData.BulletType _bulletType;
 	private int _nowBullet = 0;
+	private int _bulletsScore;
 
 	//ホーミング弾移動処理変数
 	private float _targetAngle;
@@ -41,7 +42,7 @@ public class BulletDirector
 	#endregion
 
 	#region メソッド
-	public BulletDirector(int bulletCount,float bulletSpeed,ObjectPool pool,BulletData.BulletType type)
+	public BulletDirector(int bulletCount,float bulletSpeed,ObjectPool pool,BulletData.BulletType type,int score = 0)
     {
 		//弾の生成数分の配列を確保する
 		_bulletArray = new GameObject[bulletCount];
@@ -50,6 +51,7 @@ public class BulletDirector
 		_bulletSpeed = bulletSpeed;
 		_bulletPool = pool;
 		_bulletType = type;
+		_bulletsScore = score;
     }
 
 	/// <summary>
@@ -192,7 +194,7 @@ public class BulletDirector
                     _nowHomingTime += Time.deltaTime;
 					if(_nowHomingTime >= TARGET_HOMING_TIME)
                     {
-						Debug.Log("a");
+						_nowHomingTime = 0;
 						_isHoming = false;
                     }
                 }
@@ -270,9 +272,19 @@ public class BulletDirector
 	/// <summary>
 	/// アクティブな弾をすべて消す
 	/// </summary>
-	public void CleatBullets()
+	public void ClearBullets()
     {
-
+        for (int i = 0; i < _maxCount; i++)
+        {
+            if (_bulletArray[i] is not null)
+            {
+				GameDirector.Instance.ScoreDirector.AddScore(_bulletsScore);
+                _bulletPool.EnqueueObject(_bulletArray[i]);
+                _bulletArray[i] = null;
+                _bulletColliderArray[i] = null;
+                _nowBullet--;
+            }
+        }
     }
 	#endregion
 }

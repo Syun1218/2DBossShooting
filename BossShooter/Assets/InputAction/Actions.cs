@@ -279,6 +279,17 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Pouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1d92b5cd-9bb6-413e-a0dc-70d6c4f57633"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
